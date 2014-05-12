@@ -260,9 +260,9 @@ public class DisplayServer extends JPanel implements KeyListener {
 			System.exit(-1);
 		else if(n==1){
 			while(isTryAgain == true){
-			Object[] departOptions = {"Airport 4", "Airport 3", "Airport 2","Aiport 1"};
+			Object[] departOptions = {"Airport 4", "Airport 3", "Airport 2","Airport 1"};
 			
-			Object[] arriveOptions = {"Airport 4", "Airport 3", "Airport 2","Aiport 1"};
+			Object[] arriveOptions = {"Airport 4", "Airport 3", "Airport 2","Airport 1"};
 					
 			int depart = JOptionPane.showOptionDialog(frame,
 					"From what airport would you like to depart?",
@@ -389,7 +389,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 				drawY[i] = (int)(y - airportY[i]);
 				drawY[i] = 100*gain - drawY[i];
 			}
-
+			g.drawString("Airport "+(j+1), drawX[0],drawY[0] );
 			g.drawPolygon(drawX, drawY, 4);
 		}
 	}
