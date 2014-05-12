@@ -105,7 +105,7 @@ public class Simulator extends Thread{
 				/*
 				 * Trying a periodic thing
 				 */
-				if (this.time%10000 == 0){
+				if (this.time%10000 == 0.1){
 					System.out.println("trying a new plane");
 					double[] startPose = {25, 25, 0};
 					Airplane tempAirplane = new Airplane(startPose, 5, 0, this, 75);
