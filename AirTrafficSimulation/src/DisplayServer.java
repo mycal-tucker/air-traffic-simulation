@@ -294,13 +294,21 @@ public class DisplayServer extends JPanel implements KeyListener {
 			}
 			g.drawPolygon(drawX, drawY, 9);
 			
+//			if (fuel[j]>100)
+//				g.setColor(Color.green);
+//			else if(fuel[j]<=100 && fuel[j]>50)
+//				g.setColor(Color.yellow);
+//			else if(fuel[j]<=50 && fuel[j]>0)
+//				g.setColor(Color.orange);
+//			else
+//				g.setColor(Color.red);
+//			
+//			System.out.println(fuel[j]);
 			
-			if (fuel[j]>100)
-				g.setColor(Color.green);
-			else if(fuel[j]<=100 && fuel[j]>50)
-				g.setColor(Color.yellow);
-			else if(fuel[j]<=50 && fuel[j]>0)
-				g.setColor(Color.orange);
+			if(fuel[j]<=100 && fuel[j]>=50)
+				g.setColor(new Color((int)((100-fuel[j])/50*255), 255, 0));
+			else if(fuel[j]<50 && fuel[j]>0)
+				g.setColor(new Color(255, (int)((fuel[j])/50*255), 0));
 			else
 				g.setColor(Color.red);
 			

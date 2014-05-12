@@ -204,7 +204,7 @@ public class Simulator extends Thread{
 		plane1.setPlaneName("plane1");
 
 		double[] p2startPose = {5, 5, 0};
-		Airplane plane2 = new Airplane(p2startPose, 5, 0, s, 150);
+		Airplane plane2 = new Airplane(p2startPose, 5, 0, s, 100);
 		plane2.setPlaneName("plane2");
 
 		double[] p3startPose = {5, 5, 0};
