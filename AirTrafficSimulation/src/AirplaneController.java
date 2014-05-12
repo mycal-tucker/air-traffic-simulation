@@ -119,13 +119,6 @@ public class AirplaneController extends Thread{
 			double currTheta = currPosition[2];
 			double targTheta = Math.atan2(targY - currY, targX - currX);
 			double omega = omegaGain(targTheta, currTheta);
-			//only for debugging
-//			if (this.plane.getPlaneName().equals("plane3")){
-//				System.out.println("curr: " + currTheta);
-//				System.out.println("targ: " + targTheta);
-//				System.out.println("omega: " + omega);
-//				System.out.println();
-//			}
 			
 			
 			//if close to airport, request landing
@@ -143,6 +136,7 @@ public class AirplaneController extends Thread{
 					}
 				}
 			}
+			
 			return new Control(this.linSpeed, omega);
 			
 		}

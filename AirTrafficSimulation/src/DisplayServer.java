@@ -305,6 +305,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 				g.setColor(Color.red);
 			
 			g.fillPolygon(drawX, drawY, 9);
+		
 		}
 
 	}
