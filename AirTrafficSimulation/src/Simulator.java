@@ -84,6 +84,10 @@ public class Simulator extends Thread{
 	public synchronized void setNumNonUpdated(int newNum){
 		this.numNonUpdatedPlanes = newNum;
 	}
+	
+	public synchronized AirplaneController getController(Airplane a){
+		return this.controllerMap.get(a);
+	}
 
 	/**
 	 * Just updates the time. Airplanes must pull the time
@@ -107,17 +111,17 @@ public class Simulator extends Thread{
 				/*
 				 * Trying a periodic thing
 				 */
-//				if (this.time%20000 == 5000){
-//					System.out.println("launching a new plane");
-//					double[] startPose = {25, 25, 0};
-//					Airplane tempAirplane = new Airplane(startPose, 5, 0, this, 75);
-//					tempAirplane.setPlaneName("plane" + this.time);
-//					//tempAirplane.setPlaneName("plane5");
-//					AirplaneController cont1 = new AirplaneController(this, tempAirplane, this.airportList.get(0), this.airportList.get(1), this.time + 100);
-//					cont1.start();
-//					this.airportList.get(0).spawnAirplane(tempAirplane); //get an airport
-//					this.addAirplane(tempAirplane, cont1);
-//				}
+				if (this.time%20000 == 5000){
+					System.out.println("launching a new plane");
+					double[] startPose = {25, 25, 0};
+					Airplane tempAirplane = new Airplane(startPose, 5, 0, this, 75);
+					tempAirplane.setPlaneName("plane" + this.time);
+					//tempAirplane.setPlaneName("plane5");
+					AirplaneController cont1 = new AirplaneController(this, tempAirplane, this.airportList.get(0), this.airportList.get(1), this.time + 100);
+					cont1.start();
+					this.airportList.get(0).spawnAirplane(tempAirplane); //get an airport
+					this.addAirplane(tempAirplane, cont1);
+				}
 				
 				if (this.time%20000 == 15000){
 					//have a plane takeoff
@@ -131,7 +135,7 @@ public class Simulator extends Thread{
 							ac.setDepartureTime(this.time + 5);
 							ac.setDestinationReached(false);
 							end.takeoff(a);
-							//a.setFuelLevel(newFuel); for now no more fuel
+							a.setFuelLevel(a.getFuelLevel() + 10);
 						}
 					}
 				}
@@ -207,10 +211,15 @@ public class Simulator extends Thread{
 		DisplayClient tempDC = new DisplayClient(host);
 		Simulator s = new Simulator(tempDC);
 
-		Airport a1 = new Airport(25, 25, 3, s);
+		Airport a1 = new Airport(15, 15, 3, s);
 		Airport a2 = new Airport(50, 50, 1, s);
 		Airport a3 = new Airport(25, 75, 3, s);
 		Airport a4 = new Airport(75, 25, 3, s);
+		
+		a1.setName("15, 15");
+		a2.setName("50, 50");
+		a3.setName("25, 75");
+		a4.setName("75, 25");
 
 		s.addAirport(a1);
 		s.addAirport(a2);

@@ -107,8 +107,6 @@ public class AirplaneController extends Thread{
 			Control avoidOtherPlanes = this.collisionAvoidance();
 			if (avoidOtherPlanes != null){
 				//System.out.println("just dodged a collision!");
-				//for now, ignore collision avoidance so I can focus on holding patterns
-				//FIXME
 				return avoidOtherPlanes;
 			}
 			//if avoidOtherPlanes is null then we don't need to worry about collisions yet.
@@ -122,11 +120,13 @@ public class AirplaneController extends Thread{
 			double omega = omegaGain(targTheta, currTheta);
 			
 			
+			//System.out.println("distance: " + Math.hypot(targX - currX, targY - currY));
+			
 			//if close to airport, request landing
 			if (Math.hypot(targX - currX, targY - currY) < requestLandThreshold){
 				if (this.clearedToLand && Math.hypot(targX - currX, targY - currY) < commitLandThreshold){
 					this.endAirport.commitLand(this.plane);
-					this.plane.setFlying(false); //it landed!
+					//this.plane.setFlying(false); //it landed!
 					this.destinationReached = true;
 				}
 				else if (!clearedToLand){
@@ -142,9 +142,14 @@ public class AirplaneController extends Thread{
 			
 		}
 		if (destinationReached){
-			//TODO it got to the goal. make it disappear?
+			//leave the plane there for now
+			this.clearedToLand = false;
 		}
 		return new Control(this.linSpeed, 0);
+	}
+	
+	public void setClearedToLand(boolean b){
+		this.clearedToLand = b;
 	}
 	
 	
@@ -157,7 +162,7 @@ public class AirplaneController extends Thread{
 		newPose[2] = Math.atan2(endAirport.getY() - startAirport.getY(), endAirport.getX() - startAirport.getX());
 		this.plane.setPosition(newPose);
 		if (this.plane.getFlying()){
-			System.err.println("The plane is flying but it isn't the departure time yet. What?");
+			System.err.println(this.plane.getPlaneName() + " is flying but it isn't the departure time yet. What?");
 		}
 		return new Control(0, 0);
 		//Applying this control would be illegal, but since the plane isn't flying,

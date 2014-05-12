@@ -78,7 +78,6 @@ public class Airport {
 	 * @return
 	 */
 	public synchronized boolean requestLand(Airplane a){
-		//System.out.println(a.toString() + " requesting landing");
 		if (this.landingAirplanes.contains(a)){ //if you were cleared to land, you are still
 			//cleared to land
 			return true;
@@ -129,7 +128,8 @@ public class Airport {
 			this.landingAirplanes.remove(a);
 		}
 		else if (this.groundedAirplanes.contains(a)){
-			System.err.println("you already landed. why are you de-requesting to land?");
+			throw new RuntimeException("why derequest to land if you have already landed?");
+			//System.err.println("you already landed. why are you de-requesting to land?");
 		}
 		//implied else:
 		//if it didn't request a landing in the first place, don't do anything
@@ -137,11 +137,13 @@ public class Airport {
 	
 	public void takeoff(Airplane a){
 		if (this.groundedAirplanes.contains(a)){
-			this.groundedAirplanes.remove(a);
-			a.setFlying(true);
+//			this.groundedAirplanes.remove(a);
+//			a.setFlying(true);
 		}
 		else{
 			System.err.println("That airplane wasn't here to begin with so can't take off");
 		}
+		this.groundedAirplanes.remove(a);
+		//a.setFlying(true);
 	}
 }
