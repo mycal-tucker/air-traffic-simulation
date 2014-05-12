@@ -56,8 +56,6 @@ public class AirplaneController extends Thread{
 			 * on s that it is now free.
 			 */
 			synchronized(this.s){
-				this.addAirplanes();
-				
 				newTime = this.s.getCurrentSec() + .001*this.s.getCurrentMSec();
 				while (newTime == oldTime){
 					try{
@@ -88,16 +86,6 @@ public class AirplaneController extends Thread{
 			
 		}
 	}
-	
-	private void addAirplanes(){
-		ArrayList<Airplane> listOfAirplanes = this.s.getAirplanes();
-		this.otherAirplanes = new ArrayList<Airplane>();
-		for (Airplane a: listOfAirplanes){
-			if (!a.equals(this.plane)){
-				this.addOtherAirplane(a);
-			}
-		}
-	}
 
 	public Control getControl(int time){
 		if (time < departureTime){ //get the plane pointed in the right direction
@@ -114,6 +102,7 @@ public class AirplaneController extends Thread{
 			if (avoidOtherPlanes != null){
 				//System.out.println("just dodged a collision!");
 				//for now, ignore collision avoidance so I can focus on holding patterns
+				//FIXME
 				return avoidOtherPlanes;
 			}
 			//if avoidOtherPlanes is null then we don't need to worry about collisions yet.
@@ -153,7 +142,6 @@ public class AirplaneController extends Thread{
 			
 		}
 		if (destinationReached){
-			//this.s.removeAirplane(this.plane);
 			//TODO it got to the goal. make it disappear?
 		}
 		return new Control(this.linSpeed, 0);

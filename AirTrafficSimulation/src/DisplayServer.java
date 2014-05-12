@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Ellipse2D;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -17,7 +18,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 
 	protected double gvX [], gvY[], gvTheta[];
 	protected int numVehicles = 0;
-	protected int gain = 5;
+	protected int gain = 10;
 	protected int droneX[], droneY[];
 	protected double apX [], apY[];
 	protected int airportX[], airportY[];
@@ -270,7 +271,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 			}
 			int drawX[] = new int[9];
 			int drawY[] = new int[9];
-
+			
 			for (int i = 0; i < 9; i++) {
 				// We scale the x and y by gain, since the bounds on X and Y are 100(gain)x100(gain)
 
@@ -282,11 +283,16 @@ public class DisplayServer extends JPanel implements KeyListener {
 				drawY[i] = 100*gain- drawY[i];
 			}
 			g.drawPolygon(drawX, drawY, 9);
+			
+			g.setColor(Color.red);
+			g.fillPolygon(drawX, drawY, 9);
 		}
+		
 	}
 	
 	protected synchronized void drawAirports(Graphics g){
 		g.setColor(Color.black);
+		//TODO
 		
 		for (int j = 0; j < numAirports; j ++){
 			int drawX[] = new int[4];
@@ -299,9 +305,31 @@ public class DisplayServer extends JPanel implements KeyListener {
 				drawY[i] = (int)(y - airportY[i]);
 				drawY[i] = 100*gain - drawY[i];
 			}
+			
 			g.drawPolygon(drawX, drawY, 4);
 		}
 	}
+	
+//	protected synchronized void drawFuel(Graphics g){
+//		g.setColor(Color.black);
+//		//TODO
+//		
+//		for (int j = 0; j < numVehicles; j ++){
+//			int drawX[] = new int[4];
+//			int drawY[] = new int[4];
+//			
+//			for (int i = 0; i < 4; i ++){
+//				double x = apX[j]*gain;
+//				double y = apY[j]*gain;
+//				drawX[i] = (int)(x + airportX[i]);
+//				drawY[i] = (int)(y - airportY[i]);
+//				drawY[i] = 100*gain - drawY[i];
+//			}
+//			Graphics2D g2d = (Graphics2D)g;
+//			Ellipse2D.Double circle = new Ellipse2D.Double(x, y, 1*gain, 1*gain);
+//			   g2d.fill(circle);
+//		}
+//	}
 
 	protected synchronized void drawHistories(Graphics g) {
 		g.setColor(Color.black);
@@ -320,7 +348,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 				drawY = new int[histories[j].myNumPoints];
 			}
 			else{
-
+				
 				drawX = new int[histories[j].myX.length];
 				drawY = new int[histories[j].myY.length];
 			}
@@ -331,6 +359,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 				double y = histories[j].myY[i]*gain;
 				drawX[i] = (int)(x);
 				drawY[i] = 100*gain- (int)y;
+				
 			}
 			g.drawPolyline(drawX, drawY, drawX.length);
 		}
@@ -376,4 +405,5 @@ public class DisplayServer extends JPanel implements KeyListener {
 			System.exit(-1);
 		}
 	}
+
 }

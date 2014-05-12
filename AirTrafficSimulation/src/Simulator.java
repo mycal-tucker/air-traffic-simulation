@@ -65,18 +65,6 @@ public class Simulator extends Thread{
 		this.numNonUpdatedPlanes ++;
 	}
 
-	private void addAirport(Airport a){
-		this.airportList.add(a);
-	}
-	
-	public ArrayList<Airplane> getAirplanes(){
-		return this.airplaneList;
-	}
-	
-	public ArrayList<Airport> getAirports(){
-		return this.airportList;
-	}
-	
 	public int getNumNonUpdated(){
 		return this.numNonUpdatedPlanes;
 	}
@@ -90,13 +78,15 @@ public class Simulator extends Thread{
 	 * on their own.
 	 */
 	public void run(){
-		dc.traceOff();
 		dc.clear();
+		dc.traceOff();
 		
 		this.running = true;
 		this.time = 0;
 
-		while (this.time < 1000000){ //100 seconds == 100,000 milliseconds
+		while (this.time < 100000){ //100 seconds == 100,000 milliseconds
+			
+//			System.out.println(1000000-this.time);
 			/*
 			 * Must lock on this (the simulator) to guarantee that all vehicles
 			 * get updated exactly once at each time step.
@@ -110,12 +100,12 @@ public class Simulator extends Thread{
 					x[i] = temp.getPosition()[0];
 					y[i] = temp.getPosition()[1];
 					theta[i] = temp.getPosition()[2];
+					//System.out.println("theta: " + theta[i]);
 				}
 				dc.update(this.airplaneList.size(), x, y, theta);
-//				dc.traceOn();
+				dc.traceOn();
 				
-				
-				this.time += 10;
+				this.time += 1;
 				
 				notifyAll();
 				//wait for all gv's to update
@@ -137,19 +127,13 @@ public class Simulator extends Thread{
 		dc.traceOff();
 		dc.clear();
 		
-		System.out.println("EOF Reached");
-	}
-
-	public void removeAirplane(Airplane a){
-		System.out.println("removing an airplane");
-		if (!this.airplaneList.contains(a)){
-			System.err.println("I can't remove an airplane I don't have");
-		}
-		else{
-			this.airplaneList.remove(a);
-		}
 	}
 	
+	private void addAirport(Airport a){
+		this.airportList.add(a);
+	}
+
+
 	public void printInfo(){
 		for (Airplane gv: this.airplaneList){
 			String output = new String();
@@ -167,7 +151,9 @@ public class Simulator extends Thread{
 	 * @param argv
 	 */
 	public static void main(String[] argv) {
-		if (argv.length < 1) {
+		
+		
+		if (argv.length <= 0) {
 			System.err.println("Usage: Simulator <hostname> where "
 					+ "<hostname> is where DisplayServer is running");
 			System.exit(-1);
@@ -192,21 +178,27 @@ public class Simulator extends Thread{
 		tempDC.sendAirportMessage(s.airportList);
 		
 		double[] p1startPose = {25, 25, 0};
-		Airplane plane1 = new Airplane(p1startPose, 5, 0, s, 50);
+		Airplane plane1 = new Airplane(p1startPose, 5, 0, s, 100);
 		plane1.setPlaneName("plane1");
 		
 		double[] p2startPose = {5, 5, 0};
-		Airplane plane2 = new Airplane(p2startPose, 5, 0, s, 50);
+		Airplane plane2 = new Airplane(p2startPose, 5, 0, s, 100);
 		plane2.setPlaneName("plane2");
 		
 		double[] p3startPose = {5, 5, 0};
-		Airplane plane3= new Airplane(p3startPose, 5, 0, s, 50);
+		Airplane plane3= new Airplane(p3startPose, 5, 0, s, 100);
 		plane3.setPlaneName("plane3");
 		
 		AirplaneController cont1 = new AirplaneController(s, plane1, a1, a2, 100);
 		AirplaneController cont2 = new AirplaneController(s, plane2, a3, a2, 100);
 		AirplaneController cont3 = new AirplaneController(s, plane3, a4, a2, 100);
 		
+		cont1.addOtherAirplane(plane2);
+		cont1.addOtherAirplane(plane3);
+		cont2.addOtherAirplane(plane1);
+		cont2.addOtherAirplane(plane3);
+		cont3.addOtherAirplane(plane1);
+		cont3.addOtherAirplane(plane2);
 		
 		s.addAirplane(plane1);
 		s.addAirplane(plane2);
@@ -215,6 +207,19 @@ public class Simulator extends Thread{
 		cont2.start();
 		cont3.start();
 
-		s.run();
+		s.start();
+	}
+	
+	private static double[] getStartPose(){
+		double[] startPose = {Math.random()*100, Math.random()*100, Math.random()*2*Math.PI - Math.PI};
+		return startPose;
+	}
+	
+	private static double getStartSpeed(){
+		return Math.random()*5 + 5;
+	}
+	
+	private static double getStartOmega(){
+		return Math.random()*Math.PI/2 - Math.PI/4;
 	}
 }

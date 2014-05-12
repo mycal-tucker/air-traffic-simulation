@@ -77,6 +77,20 @@ public class DisplayClient  {
 	  output.flush();
   }
   
+  public void sendFuelMessage(ArrayList<Airplane> airplaneList){
+	  StringBuffer message = new StringBuffer();
+	  message.append("fuelLevels");
+	  message.append(" ");
+	  message.append(airplaneList.size());
+	  message.append(" ");
+	  for (int i = 0; i < airplaneList.size(); i ++){
+		  Airplane a = airplaneList.get(i);
+		  message.append(a.getFuelLevel() + " ");
+	  }
+	  output.println(message);
+	  output.flush();
+  }
+  
   public static void main(String argv[]) throws IOException {
     if (argv.length == 0) {
       System.err.println("Usage: DisplayClient <hostname>\n"+

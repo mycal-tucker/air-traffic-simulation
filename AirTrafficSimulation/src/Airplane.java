@@ -81,6 +81,7 @@ public class Airplane extends Thread{
 					System.err.println("There was an interrupted exception");
 					System.err.println(ie);
 				}
+				s.notifyAll();
 			}
 		}
 	}
@@ -237,10 +238,6 @@ public class Airplane extends Thread{
 		double angSpeed = this.withinBounds(this.thetaDot, MINOMEGA, MAXOMEGA);
 		
 		this.fuelLevel -= time; //burn 1 unit of fuel per 1 second
-		if (this.fuelLevel <= 0){
-			this.s.removeAirplane(this);
-		}
-		
 		
 		if (angSpeed == 0){ //if going straight, just update x and y
 			this.x = this.withinBounds(this.x + linSpeed*time*Math.cos(this.theta), 0, 100) + Math.cos(this.theta)*errD - Math.sin(this.theta)*errC;
