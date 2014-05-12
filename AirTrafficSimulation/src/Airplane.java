@@ -223,10 +223,12 @@ public class Airplane extends Thread{
 		if (time < 0){
 			throw new RuntimeException("You should not pass in a negative value for time");
 		}
+		//System.out.println(this.fuelLevel);
 		
 		if (this.fuelLevel <=0 ){
 			this.setFlying(false);
 			this.s.removeAirplane(this);
+			return;
 		}
 		
 		if (!flying){

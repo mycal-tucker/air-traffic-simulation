@@ -111,7 +111,6 @@ public class DisplayServer extends JPanel implements KeyListener {
 					 */
 					else if (tok.equals("airports")){
 						synchronized (my_display){
-							System.out.println("got an airport message");
 							synchronized(my_display){
 								tok = st.nextToken();
 								numAirports = Integer.parseInt(tok);
@@ -128,7 +127,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 									//TODO: draw an airport at x, y
 								}
 
-								printAPS();
+								//printAPS();
 							}
 						}
 					}
@@ -181,6 +180,10 @@ public class DisplayServer extends JPanel implements KeyListener {
 		}
 	}
 	
+	/**
+	 * was used to help debug airport info
+	 */
+	@SuppressWarnings("unused")
 	private void printAPS(){
 		for (int i = 0; i < numAirports; i ++){
 			System.out.println("x: " + apX[i] + " y: " + apY[i]);

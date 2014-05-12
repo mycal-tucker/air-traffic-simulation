@@ -42,6 +42,10 @@ public class AirplaneController extends Thread{
 		this.clearedToLand = false;
 		this.destinationReached = false;
 	}
+	
+	public Airplane getAirplane(){
+		return this.plane;
+	}
 
 	public void run(){
 		double newTime = 0;
@@ -91,7 +95,7 @@ public class AirplaneController extends Thread{
 		if (time < departureTime){ //get the plane pointed in the right direction
 			return this.beforeTakeoff();
 		}
-		if (this.plane.getFuelLevel() <= 0){
+		if (this.plane.getFuelLevel() == 0){
 			System.out.println(this.plane.getPlaneName() + " is out of fuel");
 			return null;
 		}
