@@ -105,16 +105,17 @@ public class Simulator extends Thread{
 				/*
 				 * Trying a periodic thing
 				 */
-//				if (this.time%10000 == 0){
-//					System.out.println("trying a new plane");
-//					double[] startPose = {25, 25, 0};
-//					Airplane tempAirplane = new Airplane(startPose, 5, 0, this, 75);
-//					tempAirplane.setPlaneName("plane" + this.time);
-//					AirplaneController cont1 = new AirplaneController(this, tempAirplane, this.airportList.get(0), this.airportList.get(1), this.time + 10);
-//					cont1.start();
-//					this.airportList.get(0).spawnAirplane(tempAirplane); //get an airport
-//					this.airplaneList.add(tempAirplane);
-//				}
+				if (this.time%10000 == 5000){
+					System.out.println("trying a new plane");
+					double[] startPose = {25, 25, 0};
+					Airplane tempAirplane = new Airplane(startPose, 5, 0, this, 75);
+					tempAirplane.setPlaneName("plane" + this.time);
+					//tempAirplane.setPlaneName("plane5");
+					AirplaneController cont1 = new AirplaneController(this, tempAirplane, this.airportList.get(0), this.airportList.get(1), this.time + 100);
+					cont1.start();
+					this.airportList.get(0).spawnAirplane(tempAirplane); //get an airport
+					this.addAirplane(tempAirplane);
+				}
 				///////////////////////////////
 				
 				
@@ -210,7 +211,7 @@ public class Simulator extends Thread{
 		Airplane plane3= new Airplane(p3startPose, 5, 0, s, 10);
 		plane3.setPlaneName("plane3");
 
-		AirplaneController cont1 = new AirplaneController(s, plane1, a1, a2, 10000);
+		AirplaneController cont1 = new AirplaneController(s, plane1, a1, a2, 100);
 		AirplaneController cont2 = new AirplaneController(s, plane2, a3, a2, 100);
 		AirplaneController cont3 = new AirplaneController(s, plane3, a4, a2, 100);
 
