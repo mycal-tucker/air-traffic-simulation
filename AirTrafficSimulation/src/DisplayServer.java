@@ -351,10 +351,10 @@ public class DisplayServer extends JPanel implements KeyListener {
 //			
 //			System.out.println(fuel[j]);
 			
+			try{
+			
 			if(fuel[j]>100)
 				fuel[j]=100;
-			
-			try{
 				
 			if(fuel[j]<=100 && fuel[j]>=50)
 				g.setColor(new Color((int)((100-fuel[j])/50*255), 255, 0));

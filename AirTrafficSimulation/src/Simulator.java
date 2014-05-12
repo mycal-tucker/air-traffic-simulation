@@ -1,3 +1,5 @@
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -200,13 +202,23 @@ public class Simulator extends Thread{
 	 * @param argv
 	 */
 	public static void main(String[] argv) {
-		if (argv.length <= 0) {
-			System.err.println("Usage: Simulator <hostname> where "
-					+ "<hostname> is where DisplayServer is running");
-			System.exit(-1);
+//		if (argv.length <= 0) {
+//			System.err.println("Usage: Simulator <hostname> where "
+//					+ "<hostname> is where DisplayServer is running");
+//			System.exit(-1);
+//		}
+		
+		
+		String host = null;
+		try {
+			host = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
+//		String host = argv[0];
 
-		String host = argv[0];
 
 		DisplayClient tempDC = new DisplayClient(host);
 		Simulator s = new Simulator(tempDC);
