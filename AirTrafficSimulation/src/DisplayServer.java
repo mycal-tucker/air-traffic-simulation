@@ -45,7 +45,6 @@ public class DisplayServer extends JPanel implements KeyListener {
 		int trueHistoryLength;
 		int loopHistory;
 	}
-
 	History [] histories;
 	boolean trace = false;
 

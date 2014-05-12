@@ -64,6 +64,14 @@ public class Simulator extends Thread{
 		a.start();
 		this.numNonUpdatedPlanes ++;
 	}
+	
+	public void removeAirplane(Airplane a){
+		if (!this.airplaneList.contains(a)){
+			System.err.println("can't remove an airplane that never existed");
+			return;
+		}
+		this.airplaneList.remove(a);
+	}
 
 	public int getNumNonUpdated(){
 		return this.numNonUpdatedPlanes;

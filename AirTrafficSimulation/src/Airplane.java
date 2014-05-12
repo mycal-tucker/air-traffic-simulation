@@ -226,6 +226,7 @@ public class Airplane extends Thread{
 		
 		if (this.fuelLevel <=0 ){
 			this.setFlying(false);
+			this.s.removeAirplane(this);
 		}
 		
 		if (!flying){
