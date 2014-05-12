@@ -91,9 +91,6 @@ public class DisplayClient  {
 	  StringBuffer message = new StringBuffer();
 	  message.append("fuel");
 	  message.append(" ");
-	  message.append(airplaneList.size());
-	  message.append(" ");
-	  System.out.println(airplaneList.size());
 	  for (int i = 0; i < airplaneList.size(); i ++){
 		  Airplane a = airplaneList.get(i);
 		  message.append(a.getFuelLevel() + " ");

@@ -133,9 +133,6 @@ public class DisplayServer extends JPanel implements KeyListener {
 					 */
 					else if (tok.equals("fuel")){
 						synchronized (my_display){
-							tok = st.nextToken();
-							numVehicles = Integer.parseInt(tok);
-							System.out.println(numVehicles);
 							my_display.fuel = new double[numVehicles];		
 							for (int i = 0; i < numVehicles; i ++){
 								tok = st.nextToken();
@@ -298,15 +295,15 @@ public class DisplayServer extends JPanel implements KeyListener {
 			g.drawPolygon(drawX, drawY, 9);
 			
 		
-			if (fuel[j]>100)
-				g.setColor(Color.green);
-			else if(fuel[j]<=100 && fuel[j]>50)
-				g.setColor(Color.yellow);
-			else if(fuel[j]<=50 && fuel[j]>0)
-				g.setColor(Color.orange);
-			else
-				g.setColor(Color.red);
-			g.fillPolygon(drawX, drawY, 9);
+//			if (fuel[j]>100)
+//				g.setColor(Color.green);
+//			else if(fuel[j]<=100 && fuel[j]>50)
+//				g.setColor(Color.yellow);
+//			else if(fuel[j]<=50 && fuel[j]>0)
+//				g.setColor(Color.orange);
+//			else
+//				g.setColor(Color.red);
+//			g.fillPolygon(drawX, drawY, 9);
 		}
 
 	}
