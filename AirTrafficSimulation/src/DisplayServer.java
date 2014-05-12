@@ -3,6 +3,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -16,6 +17,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 	private static final long serialVersionUID = 1l;
 
 	protected double gvX [], gvY[], gvTheta[];
+	protected boolean isTryAgain = true;
 	protected int numVehicles = 0;
 	protected int gain = 5;
 	protected int droneX[], droneY[];
@@ -28,8 +30,8 @@ public class DisplayServer extends JPanel implements KeyListener {
 	protected Color[] my_colors = new Color[] {Color.black,Color.blue,Color.cyan,
 			Color.green, Color.magenta, 
 			Color.orange, Color.pink,
-			Color.red, Color.yellow,
-			Color.darkGray};
+			Color.red, Color.yellow};
+	
 	public class History {
 		History() {
 			myX = new double[100000];
@@ -160,8 +162,6 @@ public class DisplayServer extends JPanel implements KeyListener {
 								my_display.gvTheta[i] = Double.parseDouble(tok);
 								if (trace) {
 									if (histories[i].trueHistoryLength % historySkip == 0){
-
-
 										int n;
 										if (histories[i].myNumPoints == histories[i].myX.length) {
 											n = 0;                                                                    
@@ -242,6 +242,52 @@ public class DisplayServer extends JPanel implements KeyListener {
 		Container container = frame.getContentPane();
 		//container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
 		container.setLayout(new BorderLayout());
+		
+		Object[] options = {"Quit",
+				"Add New Airplane",
+		"Continue"};
+		int n = JOptionPane.showOptionDialog(frame,
+				"What would you like to do?",
+						"name",
+						JOptionPane.YES_NO_CANCEL_OPTION,
+						JOptionPane.QUESTION_MESSAGE,
+						null,
+						options,
+						options[2]);
+		System.out.println(n);
+		
+		if (n==0)
+			System.exit(-1);
+		else if(n==1){
+			while(isTryAgain == true){
+			Object[] departOptions = {"Airport 4", "Airport 3", "Airport 2","Airport 1"};
+			
+			Object[] arriveOptions = {"Airport 4", "Airport 3", "Airport 2","Airport 1"};
+					
+			int depart = JOptionPane.showOptionDialog(frame,
+					"From what airport would you like to depart?",
+							"name", JOptionPane.YES_NO_CANCEL_OPTION,
+							JOptionPane.QUESTION_MESSAGE,
+							null,
+							departOptions,
+							departOptions[3]);
+			
+			int arrive = JOptionPane.showOptionDialog(frame,
+					"To what airport would you like to arrive?",
+							"name", JOptionPane.YES_NO_CANCEL_OPTION,
+							JOptionPane.QUESTION_MESSAGE,
+							null,
+							arriveOptions,
+							arriveOptions[3]);
+			
+			if(arrive==depart){
+				JOptionPane.showMessageDialog(frame,
+					    "You cannot depart and arrive at the same airport. Please try again.");
+			}
+			else
+				isTryAgain = false;
+			}
+		}
 
 		setOpaque(true);   
 		setFocusable(true);
@@ -304,7 +350,11 @@ public class DisplayServer extends JPanel implements KeyListener {
 //				g.setColor(Color.red);
 //			
 //			System.out.println(fuel[j]);
+			
 			try{
+			
+			if(fuel[j]>100)
+				fuel[j]=100;
 				
 			if(fuel[j]<=100 && fuel[j]>=50)
 				g.setColor(new Color((int)((100-fuel[j])/50*255), 255, 0));
@@ -339,7 +389,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 				drawY[i] = (int)(y - airportY[i]);
 				drawY[i] = 100*gain - drawY[i];
 			}
-
+			g.drawString("Airport "+(j+1), drawX[0],drawY[0] );
 			g.drawPolygon(drawX, drawY, 4);
 		}
 	}
