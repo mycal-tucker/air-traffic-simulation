@@ -93,14 +93,31 @@ public class Simulator extends Thread{
 		this.time = 0;
 
 		while (this.time < 200000){ //100 seconds == 100,000 milliseconds
-
-			//			System.out.println(1000000-this.time);
 			/*
 			 * Must lock on this (the simulator) to guarantee that all vehicles
 			 * get updated exactly once at each time step.
 			 */
 			
 			synchronized(this){	
+				
+				
+				///////////////////////////////
+				/*
+				 * Trying a periodic thing
+				 */
+				if (this.time%10000 == 0){
+					System.out.println("trying a new plane");
+					double[] startPose = {25, 25, 0};
+					Airplane tempAirplane = new Airplane(startPose, 5, 0, this, 75);
+					tempAirplane.setPlaneName("plane" + this.time);
+					AirplaneController cont1 = new AirplaneController(this, tempAirplane, this.airportList.get(0), this.airportList.get(1), this.time + 10);
+					cont1.start();
+					this.airportList.get(0).spawnAirplane(tempAirplane); //get an airport
+					this.airplaneList.add(tempAirplane);
+				}
+				///////////////////////////////
+				
+				
 				
 				dc.sendAirportMessage(this.airportList);
 				dc.sendFuelMessage(this.airplaneList);
@@ -113,7 +130,6 @@ public class Simulator extends Thread{
 					x[i] = temp.getPosition()[0];
 					y[i] = temp.getPosition()[1];
 					theta[i] = temp.getPosition()[2];
-					//System.out.println("theta: " + theta[i]);
 				}
 				dc.update(this.airplaneList.size(), x, y, theta);
 				dc.traceOn();
@@ -121,12 +137,11 @@ public class Simulator extends Thread{
 				this.time += 1;
 
 				notifyAll();
-				//wait for all gv's to update
+				//wait for all planes to update
 
 				while (this.numNonUpdatedPlanes > 0){
 					try{
 						this.wait();
-						//this.numNonUpdatedPlanes --;
 					}
 					catch(InterruptedException ie){
 						System.err.println("There was an ie error");
