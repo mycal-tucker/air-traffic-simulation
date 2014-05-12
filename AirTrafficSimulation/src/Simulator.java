@@ -14,6 +14,8 @@ public class Simulator extends Thread{
 	private boolean running; //whether or not the simulation has started
 	private DisplayClient dc;
 	private int numNonUpdatedPlanes; 
+	
+	public final int simDuration = 1000000;
 
 	public Simulator(DisplayClient dc){
 		this.dc = dc;
@@ -100,7 +102,7 @@ public class Simulator extends Thread{
 		this.running = true;
 		this.time = 0;
 
-		while (this.time < 100000){ //100 seconds == 100,000 milliseconds
+		while (this.time < this.simDuration){ //100 seconds == 100,000 milliseconds
 			/*
 			 * Must lock on this (the simulator) to guarantee that all vehicles
 			 * get updated exactly once at each time step.
@@ -111,7 +113,8 @@ public class Simulator extends Thread{
 				/*
 				 * Trying a periodic thing
 				 */
-				if (this.time%20000 == 5000){
+				//spawn airplanes periodically
+				if (this.time%40000 == 5000){
 					System.out.println("launching a new plane");
 					double[] startPose = {25, 25, 0};
 					Airplane tempAirplane = new Airplane(startPose, 5, 0, this, 75);
@@ -121,23 +124,13 @@ public class Simulator extends Thread{
 					cont1.start();
 					this.airportList.get(0).spawnAirplane(tempAirplane); //get an airport
 					this.addAirplane(tempAirplane, cont1);
+					this.airportList.get(0).takeoff(tempAirplane);
 				}
 				
-				if (this.time%20000 == 15000){
-					//have a plane takeoff
-					for (Airplane a: this.airplaneList){
-						AirplaneController ac = this.controllerMap.get(a);
-						if (ac.reachedDestination()){
-							Airport start = ac.getStartAirport();
-							Airport end = ac.getEndAirport();
-							ac.setEndAirport(start);
-							ac.setStartAirport(end);
-							ac.setDepartureTime(this.time + 5);
-							ac.setDestinationReached(false);
-							end.takeoff(a);
-							a.setFuelLevel(a.getFuelLevel() + 10);
-						}
-					}
+				
+				
+				if (this.time%15000 == 10000){
+					this.flyRoundTrip();
 				}
 				///////////////////////////////
 				
@@ -180,7 +173,23 @@ public class Simulator extends Thread{
 
 		dc.traceOff();
 		dc.clear();
-
+	}
+	
+	//for any plane that is landed at its destination, make it fly back
+	private void flyRoundTrip(){
+		for (Airplane a: this.airplaneList){
+			AirplaneController ac = this.controllerMap.get(a);
+			if (ac.reachedDestination()){
+				Airport start = ac.getStartAirport();
+				Airport end = ac.getEndAirport();
+				ac.setEndAirport(start);
+				ac.setStartAirport(end);
+				ac.setDepartureTime(this.time + 5);
+				ac.setDestinationReached(false);
+				end.takeoff(a);
+				a.setFuelLevel(a.getFuelLevel() + 10);
+			}
+		}
 	}
 
 	public void printInfo(){
@@ -239,7 +248,7 @@ public class Simulator extends Thread{
 		Airplane plane3= new Airplane(p3startPose, 5, 0, s, 10);
 		plane3.setPlaneName("plane3");
 
-		AirplaneController cont1 = new AirplaneController(s, plane1, a1, a2, 100);
+		AirplaneController cont1 = new AirplaneController(s, plane1, a1, a3, 100);
 		AirplaneController cont2 = new AirplaneController(s, plane2, a3, a2, 100);
 		AirplaneController cont3 = new AirplaneController(s, plane3, a4, a2, 100);
 

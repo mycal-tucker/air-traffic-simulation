@@ -12,8 +12,8 @@ public class AirplaneController extends Thread{
 	private Airport endAirport;
 	private int departureTime;
 	
-	private boolean inHoldingPattern;
-	private int holdingStartTime;
+//	private boolean inHoldingPattern;
+//	private int holdingStartTime;
 	
 	private ArrayList<Airplane> otherAirplanes;
 	
@@ -51,7 +51,7 @@ public class AirplaneController extends Thread{
 		double newTime = 0;
 		double oldTime = 0;
 		
-		while (newTime < 100){
+		while (newTime < this.s.simDuration/1000){
 			
 			/*
 			 * Must lock on the simulator to make sure that simulator isn't accessed until
@@ -132,7 +132,7 @@ public class AirplaneController extends Thread{
 				else if (!clearedToLand){
 					this.clearedToLand = this.endAirport.requestLand(this.plane);
 					if (!clearedToLand){
-						this.holdingStartTime = this.s.getCurrentSec()*1000 + this.s.getCurrentMSec();
+						//this.holdingStartTime = this.s.getCurrentSec()*1000 + this.s.getCurrentMSec();
 						return this.holdingPattern();
 					}
 				}
@@ -199,15 +199,14 @@ public class AirplaneController extends Thread{
 			return null;
 		}
 		
-		else{ //just turn right. Can make many improvements
-//			double[] otherPosition = closest.getPosition();
-//			double otherX = otherPosition[0];
-//			double otherY = otherPosition[1];
-//			double otherTheta = otherPosition[2];
-//			double targTheta = Math.atan2(otherY - currY, otherX - currX);
-//			double omega = -omegaGain(targTheta, currTheta) + .1;
-//			//return new Control(this.linSpeed, omega);
-			return new Control(this.linSpeed, -.5);
+		else{ //doesn't take into account velocities. We could improve this...
+			double[] otherPosition = closest.getPosition();
+			double otherX = otherPosition[0];
+			double otherY = otherPosition[1];
+			//double otherTheta = otherPosition[2];
+			double targTheta = Math.atan2(otherY - currY, otherX - currX);
+			double omega = -omegaGain(targTheta, currTheta) + .1;
+			return new Control(this.linSpeed, omega);
 		}
 	}
 

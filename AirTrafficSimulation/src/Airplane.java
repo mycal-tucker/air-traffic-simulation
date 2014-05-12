@@ -70,7 +70,7 @@ public class Airplane extends Thread{
 					else{
 						s.wait();
 					}
-					if (time >= 100){
+					if (time >= this.s.simDuration/1000){
 						done = true;
 					}
 					

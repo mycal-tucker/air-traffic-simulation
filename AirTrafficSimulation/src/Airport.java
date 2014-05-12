@@ -16,7 +16,7 @@ public class Airport {
 	private String name;
 	
 	private int lastLandingTime;
-	private final int landingTimeWindow = 5000; //milliseconds
+	private final int landingTimeWindow = 500; //milliseconds
 	
 	public Airport(double x, double y, int capacity, Simulator sim){
 		this.x = x;
