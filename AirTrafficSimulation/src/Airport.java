@@ -45,6 +45,10 @@ public class Airport {
 		this.name = s.toUpperCase();
 	}
 	
+	public String getAirportName(){
+		return this.name;
+	}
+	
 	public synchronized double getCapacity(){
 		return this.maxCapacity - this.landingAirplanes.size() - this.groundedAirplanes.size();
 	}
@@ -127,6 +131,8 @@ public class Airport {
 		else if (this.groundedAirplanes.contains(a)){
 			System.err.println("you already landed. why are you de-requesting to land?");
 		}
+		//implied else:
+		//if it didn't request a landing in the first place, don't do anything
 	}
 	
 	public void takeoff(Airplane a){

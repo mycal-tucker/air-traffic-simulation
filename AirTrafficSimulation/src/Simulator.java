@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * @author Mycal Tucker
@@ -8,7 +9,8 @@ public class Simulator extends Thread{
 	private int time; //current time of simulation in milliseconds
 	private ArrayList<Airplane> airplaneList; //the Airplanes that will be simulated
 	private ArrayList<Airport> airportList;
-
+	private HashMap<Airplane, AirplaneController> controllerMap;
+	
 	private boolean running; //whether or not the simulation has started
 	private DisplayClient dc;
 	private int numNonUpdatedPlanes; 
@@ -18,6 +20,7 @@ public class Simulator extends Thread{
 		this.running = false;
 		this.airplaneList = new ArrayList<Airplane>();
 		this.airportList = new ArrayList<Airport>();
+		this.controllerMap = new HashMap<Airplane, AirplaneController>();
 	}
 
 	/**
@@ -58,9 +61,10 @@ public class Simulator extends Thread{
 	 * @param gv: ground vehicle to add the list of ground vehicles
 	 * Note: assumes that the ground vehicle arrives non-updated
 	 */
-	public synchronized void addAirplane(Airplane a){
+	public synchronized void addAirplane(Airplane a, AirplaneController ac){
 		this.airplaneList.add(a);
 		a.start();
+		this.controllerMap.put(a, ac);
 		this.numNonUpdatedPlanes ++;
 	}
 
@@ -99,22 +103,37 @@ public class Simulator extends Thread{
 			 */
 			
 			synchronized(this){	
-				
-				
 				///////////////////////////////
 				/*
 				 * Trying a periodic thing
 				 */
-				if (this.time%10000 == 5000){
-					System.out.println("trying a new plane");
-					double[] startPose = {25, 25, 0};
-					Airplane tempAirplane = new Airplane(startPose, 5, 0, this, 75);
-					tempAirplane.setPlaneName("plane" + this.time);
-					//tempAirplane.setPlaneName("plane5");
-					AirplaneController cont1 = new AirplaneController(this, tempAirplane, this.airportList.get(0), this.airportList.get(1), this.time + 100);
-					cont1.start();
-					this.airportList.get(0).spawnAirplane(tempAirplane); //get an airport
-					this.addAirplane(tempAirplane);
+//				if (this.time%20000 == 5000){
+//					System.out.println("launching a new plane");
+//					double[] startPose = {25, 25, 0};
+//					Airplane tempAirplane = new Airplane(startPose, 5, 0, this, 75);
+//					tempAirplane.setPlaneName("plane" + this.time);
+//					//tempAirplane.setPlaneName("plane5");
+//					AirplaneController cont1 = new AirplaneController(this, tempAirplane, this.airportList.get(0), this.airportList.get(1), this.time + 100);
+//					cont1.start();
+//					this.airportList.get(0).spawnAirplane(tempAirplane); //get an airport
+//					this.addAirplane(tempAirplane, cont1);
+//				}
+				
+				if (this.time%20000 == 15000){
+					//have a plane takeoff
+					for (Airplane a: this.airplaneList){
+						AirplaneController ac = this.controllerMap.get(a);
+						if (ac.reachedDestination()){
+							Airport start = ac.getStartAirport();
+							Airport end = ac.getEndAirport();
+							ac.setEndAirport(start);
+							ac.setStartAirport(end);
+							ac.setDepartureTime(this.time + 5);
+							ac.setDestinationReached(false);
+							end.takeoff(a);
+							//a.setFuelLevel(newFuel); for now no more fuel
+						}
+					}
 				}
 				///////////////////////////////
 				
@@ -215,26 +234,15 @@ public class Simulator extends Thread{
 		AirplaneController cont2 = new AirplaneController(s, plane2, a3, a2, 100);
 		AirplaneController cont3 = new AirplaneController(s, plane3, a4, a2, 100);
 
-		s.addAirplane(plane1);
-		s.addAirplane(plane2);
-		s.addAirplane(plane3);
+		s.addAirplane(plane1, cont1);
+		s.addAirplane(plane2, cont2);
+		s.addAirplane(plane3, cont3);
+		
+		
 		cont1.start();
 		cont2.start();
 		cont3.start();
 
 		s.start();
-	}
-
-	private static double[] getStartPose(){
-		double[] startPose = {Math.random()*100, Math.random()*100, Math.random()*2*Math.PI - Math.PI};
-		return startPose;
-	}
-
-	private static double getStartSpeed(){
-		return Math.random()*5 + 5;
-	}
-
-	private static double getStartOmega(){
-		return Math.random()*Math.PI/2 - Math.PI/4;
 	}
 }

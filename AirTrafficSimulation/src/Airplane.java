@@ -17,8 +17,6 @@ public class Airplane extends Thread{
 	private final int MAXSPEED = 10;
 	private final int MINCOORDINATE = 0;
 	private final int MAXCOORDINATE = 100;
-	private final double MINTHETA = -Math.PI;
-	private final double MAXTHETA = Math.PI;
 	private final double MINOMEGA = -Math.PI/4;
 	private final double MAXOMEGA = Math.PI/4;
 	
@@ -115,6 +113,10 @@ public class Airplane extends Thread{
 	
 	public synchronized double getFuelLevel(){
 		return this.fuelLevel;
+	}
+	
+	public synchronized void setFuelLevel(double newFuel){
+		this.fuelLevel = newFuel;
 	}
 	
 	public synchronized boolean getFlying(){
@@ -227,7 +229,6 @@ public class Airplane extends Thread{
 		
 		if (Math.abs(this.fuelLevel) < msec && this.fuelLevel <= 0 ){
 			this.setFlying(false);
-			//this.s.removeAirplane(this);
 			return;
 		}
 		

@@ -98,6 +98,7 @@ public class AirplaneController extends Thread{
 		if (this.plane.getFuelLevel() <= 0){
 			//System.out.println(this.plane.getPlaneName() + " is out of fuel");
 			this.plane.setFlying(false);
+			this.endAirport.unrequestLand(this.plane);
 			return null;
 		}
 		if (time >= departureTime && !destinationReached){
@@ -290,6 +291,26 @@ public class AirplaneController extends Thread{
 	
 	public int getDepartureTime(){
 		return this.departureTime;
+	}
+	
+	public void setStartAirport(Airport a){
+		this.startAirport = a;
+	}
+	
+	public void setEndAirport(Airport a){
+		this.endAirport = a;
+	}
+	
+	public void setDepartureTime(int t){
+		this.departureTime = t;
+	}
+	
+	public boolean reachedDestination(){
+		return this.destinationReached;
+	}
+	
+	public void setDestinationReached(boolean areWeThereYet){
+		this.destinationReached = areWeThereYet;
 	}
 	
 	public void addOtherAirplane(Airplane a){
