@@ -297,16 +297,10 @@ public class DisplayServer extends JPanel implements KeyListener {
 				drawY[i] = 100*gain- drawY[i];
 			}
 			g.drawPolygon(drawX, drawY, 9);
+			
+			float per_fuel = (float)(fuel[j]/100);
 
-			System.out.println(fuel[j]);
-			if (fuel[j]>100)
-				g.setColor(Color.green);
-			else if(fuel[j]<=100 && fuel[j]>50)
-				g.setColor(Color.yellow);
-			else if(fuel[j]<=50 && fuel[j]>0)
-				g.setColor(Color.orange);
-			else
-				g.setColor(Color.red);
+				g.setColor(new Color(per_fuel, 1, 1));
 			g.fillPolygon(drawX, drawY, 9);
 		}
 
