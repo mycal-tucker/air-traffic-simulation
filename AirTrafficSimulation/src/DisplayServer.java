@@ -3,6 +3,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -16,6 +17,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 	private static final long serialVersionUID = 1l;
 
 	protected double gvX [], gvY[], gvTheta[];
+	protected boolean isTryAgain = true;
 	protected int numVehicles = 0;
 	protected int gain = 5;
 	protected int droneX[], droneY[];
@@ -30,6 +32,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 			Color.orange, Color.pink,
 			Color.red, Color.yellow,
 			Color.darkGray};
+	
 	public class History {
 		History() {
 			myX = new double[100000];
@@ -242,6 +245,52 @@ public class DisplayServer extends JPanel implements KeyListener {
 		Container container = frame.getContentPane();
 		//container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
 		container.setLayout(new BorderLayout());
+		
+		Object[] options = {"Quit",
+				"Add New Airplane",
+		"Continue"};
+		int n = JOptionPane.showOptionDialog(frame,
+				"What would you like to do?",
+						"name",
+						JOptionPane.YES_NO_CANCEL_OPTION,
+						JOptionPane.QUESTION_MESSAGE,
+						null,
+						options,
+						options[2]);
+		System.out.println(n);
+		
+		if (n==0)
+			System.exit(-1);
+		else if(n==1){
+			while(isTryAgain == true){
+			Object[] departOptions = {"Airport 4", "Airport 3", "Airport 2","Aiport 1"};
+			
+			Object[] arriveOptions = {"Airport 4", "Airport 3", "Airport 2","Aiport 1"};
+					
+			int depart = JOptionPane.showOptionDialog(frame,
+					"From what airport would you like to depart?",
+							"name", JOptionPane.YES_NO_CANCEL_OPTION,
+							JOptionPane.QUESTION_MESSAGE,
+							null,
+							departOptions,
+							departOptions[3]);
+			
+			int arrive = JOptionPane.showOptionDialog(frame,
+					"To what airport would you like to arrive?",
+							"name", JOptionPane.YES_NO_CANCEL_OPTION,
+							JOptionPane.QUESTION_MESSAGE,
+							null,
+							arriveOptions,
+							arriveOptions[3]);
+			
+			if(arrive==depart){
+				JOptionPane.showMessageDialog(frame,
+					    "You cannot depart and arrive at the same airport. Please try again.");
+			}
+			else
+				isTryAgain = false;
+			}
+		}
 
 		setOpaque(true);   
 		setFocusable(true);
