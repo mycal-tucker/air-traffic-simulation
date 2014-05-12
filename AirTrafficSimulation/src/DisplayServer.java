@@ -17,7 +17,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 
 	protected double gvX [], gvY[], gvTheta[];
 	protected int numVehicles = 0;
-	protected int gain = 10;
+	protected int gain = 5;
 	protected int droneX[], droneY[];
 	protected double apX [], apY[], fuel[];
 	protected int airportX[], airportY[];
@@ -140,7 +140,6 @@ public class DisplayServer extends JPanel implements KeyListener {
 								tok = st.nextToken();
 								double x = Double.parseDouble(tok);
 								fuel[i]=x;
-								//System.out.println(x);
 							}
 						}
 					}
@@ -297,10 +296,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 			}
 			g.drawPolygon(drawX, drawY, 9);
 			
-//			float per_fuel = (float)(fuel[j]/100);
-//			g.setColor(new Color(per_fuel, 1, 1));
-			
-			//System.out.println(fuel[j]);
+		
 			if (fuel[j]>100)
 				g.setColor(Color.green);
 			else if(fuel[j]<=100 && fuel[j]>50)
