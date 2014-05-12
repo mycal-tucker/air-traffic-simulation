@@ -65,12 +65,22 @@ public class Simulator extends Thread{
 		this.numNonUpdatedPlanes ++;
 	}
 	
+	
+	private void addAirport(Airport a){
+		this.airportList.add(a);
+	}
+
+	
 	public void removeAirplane(Airplane a){
 		if (!this.airplaneList.contains(a)){
 			System.err.println("can't remove an airplane that never existed");
 			return;
 		}
 		this.airplaneList.remove(a);
+	}
+	
+	public ArrayList<Airplane> getAirplaneList(){
+		return this.airplaneList;
 	}
 
 	public int getNumNonUpdated(){
@@ -136,11 +146,6 @@ public class Simulator extends Thread{
 		dc.clear();
 		
 	}
-	
-	private void addAirport(Airport a){
-		this.airportList.add(a);
-	}
-
 
 	public void printInfo(){
 		for (Airplane gv: this.airplaneList){
@@ -201,12 +206,6 @@ public class Simulator extends Thread{
 		AirplaneController cont2 = new AirplaneController(s, plane2, a3, a2, 100);
 		AirplaneController cont3 = new AirplaneController(s, plane3, a4, a2, 100);
 		
-		cont1.addOtherAirplane(plane2);
-		cont1.addOtherAirplane(plane3);
-		cont2.addOtherAirplane(plane1);
-		cont2.addOtherAirplane(plane3);
-		cont3.addOtherAirplane(plane1);
-		cont3.addOtherAirplane(plane2);
 		
 		s.addAirplane(plane1);
 		s.addAirplane(plane2);

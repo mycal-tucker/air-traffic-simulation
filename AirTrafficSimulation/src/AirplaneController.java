@@ -171,6 +171,16 @@ public class AirplaneController extends Thread{
 		double currTheta = currPosition[2];
 		
 		Airplane closest = null;
+		
+		this.otherAirplanes = new ArrayList<Airplane>();
+		ArrayList<Airplane> allPlanes = this.s.getAirplaneList();
+		for (Airplane a: allPlanes){
+			if (!this.plane.getPlaneName().equals(a.getPlaneName())){
+				this.otherAirplanes.add(a);
+			}
+		}
+		
+		
 		double minDistance = Integer.MIN_VALUE;
 		for (Airplane temp: this.otherAirplanes){
 			double[] tempPosition = temp.getPosition();
