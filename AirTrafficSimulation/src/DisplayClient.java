@@ -77,11 +77,19 @@ public class DisplayClient  {
 	  output.flush();
   }
   
+  /**
+   * The message goes like this
+   * fuel f1 f2 f3 f4 f5 f6
+   * 
+   * e.g.:
+   * fuel 2 25 25 75 75
+   * 
+   * @param airplaneList: list of airplanes
+   */
+  
   public void sendFuelMessage(ArrayList<Airplane> airplaneList){
 	  StringBuffer message = new StringBuffer();
-	  message.append("fuelLevels");
-	  message.append(" ");
-	  message.append(airplaneList.size());
+	  message.append("fuel");
 	  message.append(" ");
 	  for (int i = 0; i < airplaneList.size(); i ++){
 		  Airplane a = airplaneList.get(i);

@@ -20,7 +20,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 	protected int numVehicles = 0;
 	protected int gain = 10;
 	protected int droneX[], droneY[];
-	protected double apX [], apY[];
+	protected double apX [], apY[], fuel[];
 	protected int airportX[], airportY[];
 	protected int numAirports;
 	protected JFrame frame;
@@ -111,8 +111,6 @@ public class DisplayServer extends JPanel implements KeyListener {
 					 */
 					else if (tok.equals("airports")){
 						synchronized (my_display){
-							System.out.println("got an airport message");
-							synchronized(my_display){
 								tok = st.nextToken();
 								numAirports = Integer.parseInt(tok);
 								my_display.apX = new double[numAirports];
@@ -127,14 +125,24 @@ public class DisplayServer extends JPanel implements KeyListener {
 									apY[i] = y;
 									//TODO: draw an airport at x, y
 								}
-
-								printAPS();
 							}
 						}
-					}
+					
 					/*
 					 * End of our thing
 					 */
+					else if (tok.equals("fuel")){
+						synchronized (my_display){
+								my_display.fuel = new double[numVehicles];		
+								for (int i = 0; i < numVehicles; i ++){
+									tok = st.nextToken();
+									double x = Double.parseDouble(tok);
+									fuel[i]=x;
+									System.out.println(x);
+								}
+							}
+						}
+					
 					else {
 						synchronized (my_display) {
 							if (my_display.numVehicles != Integer.parseInt(tok)) {
@@ -283,6 +291,14 @@ public class DisplayServer extends JPanel implements KeyListener {
 			}
 			g.drawPolygon(drawX, drawY, 9);
 			
+			System.out.println(fuel[j]);
+			if (fuel[j]>100)
+			g.setColor(Color.green);
+			else if(fuel[j]<=100 && fuel[j]>50)
+			g.setColor(Color.yellow);
+			else if(fuel[j]<=50 && fuel[j]>0)
+			g.setColor(Color.orange);
+			else
 			g.setColor(Color.red);
 			g.fillPolygon(drawX, drawY, 9);
 		}
