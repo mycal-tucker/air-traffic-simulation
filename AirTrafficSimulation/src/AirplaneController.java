@@ -95,8 +95,9 @@ public class AirplaneController extends Thread{
 		if (time < departureTime){ //get the plane pointed in the right direction
 			return this.beforeTakeoff();
 		}
-		if (this.plane.getFuelLevel() == 0){
-			System.out.println(this.plane.getPlaneName() + " is out of fuel");
+		if (this.plane.getFuelLevel() <= 0){
+			//System.out.println(this.plane.getPlaneName() + " is out of fuel");
+			this.plane.setFlying(false);
 			return null;
 		}
 		if (time >= departureTime && !destinationReached){

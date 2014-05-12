@@ -176,8 +176,6 @@ public class Simulator extends Thread{
 	 * @param argv
 	 */
 	public static void main(String[] argv) {
-
-
 		if (argv.length <= 0) {
 			System.err.println("Usage: Simulator <hostname> where "
 					+ "<hostname> is where DisplayServer is running");
@@ -213,7 +211,7 @@ public class Simulator extends Thread{
 		Airplane plane3= new Airplane(p3startPose, 5, 0, s, 10);
 		plane3.setPlaneName("plane3");
 
-		AirplaneController cont1 = new AirplaneController(s, plane1, a1, a2, 100);
+		AirplaneController cont1 = new AirplaneController(s, plane1, a1, a2, 10000);
 		AirplaneController cont2 = new AirplaneController(s, plane2, a3, a2, 100);
 		AirplaneController cont3 = new AirplaneController(s, plane3, a4, a2, 100);
 
