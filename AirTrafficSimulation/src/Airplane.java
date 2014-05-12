@@ -225,9 +225,9 @@ public class Airplane extends Thread{
 		}
 		//System.out.println(this.fuelLevel);
 		
-		if (this.fuelLevel <=0 ){
+		if (Math.abs(this.fuelLevel) < msec && this.fuelLevel <= 0 ){
 			this.setFlying(false);
-			this.s.removeAirplane(this);
+			//this.s.removeAirplane(this);
 			return;
 		}
 		

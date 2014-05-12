@@ -189,7 +189,7 @@ public class AirplaneController extends Thread{
 		for (Airplane temp: this.otherAirplanes){
 			double[] tempPosition = temp.getPosition();
 			double tempDistance = Math.hypot(currY - tempPosition[1], currX - tempPosition[0]);
-			if (closest == null || minDistance > tempDistance){
+			if ((closest == null || minDistance > tempDistance) && temp.getFlying() ){
 				closest = temp;
 				minDistance = tempDistance;
 			}

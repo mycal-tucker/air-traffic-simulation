@@ -8,7 +8,6 @@ public class Simulator extends Thread{
 	private int time; //current time of simulation in milliseconds
 	private ArrayList<Airplane> airplaneList; //the Airplanes that will be simulated
 	private ArrayList<Airport> airportList;
-	private ArrayList<AirplaneController> controllerList;
 
 	private boolean running; //whether or not the simulation has started
 	private DisplayClient dc;
@@ -19,7 +18,6 @@ public class Simulator extends Thread{
 		this.running = false;
 		this.airplaneList = new ArrayList<Airplane>();
 		this.airportList = new ArrayList<Airport>();
-		this.controllerList = new ArrayList<AirplaneController>();
 	}
 
 	/**
@@ -69,28 +67,6 @@ public class Simulator extends Thread{
 
 	private void addAirport(Airport a){
 		this.airportList.add(a);
-	}
-
-
-	public synchronized void removeAirplane(Airplane a){
-		if (!this.airplaneList.contains(a)){
-			System.err.println("can't remove an airplane that never existed");
-			return;
-		}
-		this.airplaneList.remove(a);
-		this.numNonUpdatedPlanes --;
-		try{
-			a.interrupt();
-			for (AirplaneController ac: this.controllerList){
-				if (ac.getAirplane().getPlaneName().equals(a.getPlaneName())){
-					ac.interrupt();
-				}
-			}
-		}
-		catch (Exception e){
-			System.err.println("error interrupting ac");
-		}
-		System.out.println("airplane has been fully removed");
 	}
 
 	public synchronized ArrayList<Airplane> getAirplaneList(){
@@ -215,11 +191,11 @@ public class Simulator extends Thread{
 		plane1.setPlaneName("plane1");
 
 		double[] p2startPose = {5, 5, 0};
-		Airplane plane2 = new Airplane(p2startPose, 5, 0, s, 50);
+		Airplane plane2 = new Airplane(p2startPose, 5, 0, s, 150);
 		plane2.setPlaneName("plane2");
 
 		double[] p3startPose = {5, 5, 0};
-		Airplane plane3= new Airplane(p3startPose, 5, 0, s, 50);
+		Airplane plane3= new Airplane(p3startPose, 5, 0, s, 10);
 		plane3.setPlaneName("plane3");
 
 		AirplaneController cont1 = new AirplaneController(s, plane1, a1, a2, 100);
@@ -232,10 +208,6 @@ public class Simulator extends Thread{
 		cont1.start();
 		cont2.start();
 		cont3.start();
-
-		s.controllerList.add(cont1);
-		s.controllerList.add(cont2);
-		s.controllerList.add(cont3);
 
 		s.start();
 	}

@@ -1,7 +1,6 @@
 import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Ellipse2D;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -141,7 +140,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 								tok = st.nextToken();
 								double x = Double.parseDouble(tok);
 								fuel[i]=x;
-								System.out.println(x);
+								//System.out.println(x);
 							}
 						}
 					}
@@ -298,9 +297,18 @@ public class DisplayServer extends JPanel implements KeyListener {
 			}
 			g.drawPolygon(drawX, drawY, 9);
 			
-			float per_fuel = (float)(fuel[j]/100);
-
-				g.setColor(new Color(per_fuel, 1, 1));
+//			float per_fuel = (float)(fuel[j]/100);
+//			g.setColor(new Color(per_fuel, 1, 1));
+			
+			//System.out.println(fuel[j]);
+			if (fuel[j]>100)
+				g.setColor(Color.green);
+			else if(fuel[j]<=100 && fuel[j]>50)
+				g.setColor(Color.yellow);
+			else if(fuel[j]<=50 && fuel[j]>0)
+				g.setColor(Color.orange);
+			else
+				g.setColor(Color.red);
 			g.fillPolygon(drawX, drawY, 9);
 		}
 
