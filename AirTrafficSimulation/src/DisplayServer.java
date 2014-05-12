@@ -30,8 +30,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 	protected Color[] my_colors = new Color[] {Color.black,Color.blue,Color.cyan,
 			Color.green, Color.magenta, 
 			Color.orange, Color.pink,
-			Color.red, Color.yellow,
-			Color.darkGray};
+			Color.red, Color.yellow};
 	
 	public class History {
 		History() {
@@ -163,8 +162,6 @@ public class DisplayServer extends JPanel implements KeyListener {
 								my_display.gvTheta[i] = Double.parseDouble(tok);
 								if (trace) {
 									if (histories[i].trueHistoryLength % historySkip == 0){
-
-
 										int n;
 										if (histories[i].myNumPoints == histories[i].myX.length) {
 											n = 0;                                                                    
@@ -353,6 +350,10 @@ public class DisplayServer extends JPanel implements KeyListener {
 //				g.setColor(Color.red);
 //			
 //			System.out.println(fuel[j]);
+			
+			if(fuel[j]>100)
+				fuel[j]=100;
+			
 			try{
 				
 			if(fuel[j]<=100 && fuel[j]>=50)
