@@ -304,15 +304,21 @@ public class DisplayServer extends JPanel implements KeyListener {
 //				g.setColor(Color.red);
 //			
 //			System.out.println(fuel[j]);
-			
+			try{
+				
 			if(fuel[j]<=100 && fuel[j]>=50)
 				g.setColor(new Color((int)((100-fuel[j])/50*255), 255, 0));
 			else if(fuel[j]<50 && fuel[j]>0)
 				g.setColor(new Color(255, (int)((fuel[j])/50*255), 0));
 			else
-				g.setColor(Color.red);
+				g.setColor(Color.black);
 			
 			g.fillPolygon(drawX, drawY, 9);
+			
+			}
+			catch(ArrayIndexOutOfBoundsException e){
+				System.out.println(e);
+			}
 		
 		}
 
