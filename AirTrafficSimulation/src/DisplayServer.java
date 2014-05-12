@@ -20,7 +20,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 	protected int numVehicles = 0;
 	protected int gain = 10;
 	protected int droneX[], droneY[];
-	protected double apX [], apY[];
+	protected double apX [], apY[], fuel[];
 	protected int airportX[], airportY[];
 	protected int numAirports;
 	protected JFrame frame;
@@ -111,29 +111,41 @@ public class DisplayServer extends JPanel implements KeyListener {
 					 */
 					else if (tok.equals("airports")){
 						synchronized (my_display){
-							synchronized(my_display){
-								tok = st.nextToken();
-								numAirports = Integer.parseInt(tok);
-								my_display.apX = new double[numAirports];
-								my_display.apY = new double[numAirports];
-								
-								for (int i = 0; i < numAirports; i ++){
-									tok = st.nextToken();
-									double x = Double.parseDouble(tok);
-									tok = st.nextToken();
-									double y = Double.parseDouble(tok);
-									apX[i] = x;
-									apY[i] = y;
-									//TODO: draw an airport at x, y
-								}
 
-								//printAPS();
+							tok = st.nextToken();
+							numAirports = Integer.parseInt(tok);
+							my_display.apX = new double[numAirports];
+							my_display.apY = new double[numAirports];
+
+							for (int i = 0; i < numAirports; i ++){
+								tok = st.nextToken();
+								double x = Double.parseDouble(tok);
+								tok = st.nextToken();
+								double y = Double.parseDouble(tok);
+								apX[i] = x;
+								apY[i] = y;
+								//TODO: draw an airport at x, y
 							}
+
+							//printAPS();
 						}
 					}
+
 					/*
 					 * End of our thing
 					 */
+					else if (tok.equals("fuel")){
+						synchronized (my_display){
+							my_display.fuel = new double[numVehicles];		
+							for (int i = 0; i < numVehicles; i ++){
+								tok = st.nextToken();
+								double x = Double.parseDouble(tok);
+								fuel[i]=x;
+								System.out.println(x);
+							}
+						}
+					}
+
 					else {
 						synchronized (my_display) {
 							if (my_display.numVehicles != Integer.parseInt(tok)) {
@@ -179,7 +191,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 			return; 
 		}
 	}
-	
+
 	/**
 	 * was used to help debug airport info
 	 */
@@ -208,11 +220,11 @@ public class DisplayServer extends JPanel implements KeyListener {
 		droneX[6] = -8;  droneY[6] = 2;
 		droneX[7] = 0;   droneY[7] = 2;
 		droneX[8] = 0;   droneY[8] = 5;
-		
+
 		//Airports are just squares:
 		airportX = new int[4];
 		airportY = new int[4];
-		
+
 		airportX[0] = -10; airportY[0] = -10;
 		airportX[1] = 10; airportY[1] = -10;
 		airportX[2] = 10; airportY[2] = 10;
@@ -273,7 +285,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 			}
 			int drawX[] = new int[9];
 			int drawY[] = new int[9];
-			
+
 			for (int i = 0; i < 9; i++) {
 				// We scale the x and y by gain, since the bounds on X and Y are 100(gain)x100(gain)
 
@@ -285,21 +297,29 @@ public class DisplayServer extends JPanel implements KeyListener {
 				drawY[i] = 100*gain- drawY[i];
 			}
 			g.drawPolygon(drawX, drawY, 9);
-			
-			g.setColor(Color.red);
+
+			System.out.println(fuel[j]);
+			if (fuel[j]>100)
+				g.setColor(Color.green);
+			else if(fuel[j]<=100 && fuel[j]>50)
+				g.setColor(Color.yellow);
+			else if(fuel[j]<=50 && fuel[j]>0)
+				g.setColor(Color.orange);
+			else
+				g.setColor(Color.red);
 			g.fillPolygon(drawX, drawY, 9);
 		}
-		
+
 	}
-	
+
 	protected synchronized void drawAirports(Graphics g){
 		g.setColor(Color.black);
 		//TODO
-		
+
 		for (int j = 0; j < numAirports; j ++){
 			int drawX[] = new int[4];
 			int drawY[] = new int[4];
-			
+
 			for (int i = 0; i < 4; i ++){
 				double x = apX[j]*gain;
 				double y = apY[j]*gain;
@@ -307,31 +327,31 @@ public class DisplayServer extends JPanel implements KeyListener {
 				drawY[i] = (int)(y - airportY[i]);
 				drawY[i] = 100*gain - drawY[i];
 			}
-			
+
 			g.drawPolygon(drawX, drawY, 4);
 		}
 	}
-	
-//	protected synchronized void drawFuel(Graphics g){
-//		g.setColor(Color.black);
-//		//TODO
-//		
-//		for (int j = 0; j < numVehicles; j ++){
-//			int drawX[] = new int[4];
-//			int drawY[] = new int[4];
-//			
-//			for (int i = 0; i < 4; i ++){
-//				double x = apX[j]*gain;
-//				double y = apY[j]*gain;
-//				drawX[i] = (int)(x + airportX[i]);
-//				drawY[i] = (int)(y - airportY[i]);
-//				drawY[i] = 100*gain - drawY[i];
-//			}
-//			Graphics2D g2d = (Graphics2D)g;
-//			Ellipse2D.Double circle = new Ellipse2D.Double(x, y, 1*gain, 1*gain);
-//			   g2d.fill(circle);
-//		}
-//	}
+
+	//	protected synchronized void drawFuel(Graphics g){
+	//		g.setColor(Color.black);
+	//		//TODO
+	//		
+	//		for (int j = 0; j < numVehicles; j ++){
+	//			int drawX[] = new int[4];
+	//			int drawY[] = new int[4];
+	//			
+	//			for (int i = 0; i < 4; i ++){
+	//				double x = apX[j]*gain;
+	//				double y = apY[j]*gain;
+	//				drawX[i] = (int)(x + airportX[i]);
+	//				drawY[i] = (int)(y - airportY[i]);
+	//				drawY[i] = 100*gain - drawY[i];
+	//			}
+	//			Graphics2D g2d = (Graphics2D)g;
+	//			Ellipse2D.Double circle = new Ellipse2D.Double(x, y, 1*gain, 1*gain);
+	//			   g2d.fill(circle);
+	//		}
+	//	}
 
 	protected synchronized void drawHistories(Graphics g) {
 		g.setColor(Color.black);
@@ -350,7 +370,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 				drawY = new int[histories[j].myNumPoints];
 			}
 			else{
-				
+
 				drawX = new int[histories[j].myX.length];
 				drawY = new int[histories[j].myY.length];
 			}
@@ -361,7 +381,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 				double y = histories[j].myY[i]*gain;
 				drawX[i] = (int)(x);
 				drawY[i] = 100*gain- (int)y;
-				
+
 			}
 			g.drawPolyline(drawX, drawY, drawX.length);
 		}

@@ -123,7 +123,12 @@ public class Simulator extends Thread{
 			 * Must lock on this (the simulator) to guarantee that all vehicles
 			 * get updated exactly once at each time step.
 			 */
-			synchronized(this){				
+			
+			synchronized(this){	
+				
+				dc.sendAirportMessage(this.airportList);
+				dc.sendFuelMessage(this.airplaneList);
+				
 				double[] x = new double[this.airplaneList.size()];
 				double[] y = new double[this.airplaneList.size()];
 				double[] theta = new double[this.airplaneList.size()];
@@ -155,6 +160,7 @@ public class Simulator extends Thread{
 
 				this.numNonUpdatedPlanes = this.airplaneList.size();
 			}
+			
 		}
 
 		dc.traceOff();
@@ -202,19 +208,18 @@ public class Simulator extends Thread{
 		s.addAirport(a2);
 		s.addAirport(a3);
 		s.addAirport(a4);
-
-		tempDC.sendAirportMessage(s.airportList);
-
+		
+		
 		double[] p1startPose = {25, 25, 0};
-		Airplane plane1 = new Airplane(p1startPose, 5, 0, s, 5);
+		Airplane plane1 = new Airplane(p1startPose, 5, 0, s, 50);
 		plane1.setPlaneName("plane1");
 
 		double[] p2startPose = {5, 5, 0};
-		Airplane plane2 = new Airplane(p2startPose, 5, 0, s, 100);
+		Airplane plane2 = new Airplane(p2startPose, 5, 0, s, 50);
 		plane2.setPlaneName("plane2");
 
 		double[] p3startPose = {5, 5, 0};
-		Airplane plane3= new Airplane(p3startPose, 5, 0, s, 100);
+		Airplane plane3= new Airplane(p3startPose, 5, 0, s, 50);
 		plane3.setPlaneName("plane3");
 
 		AirplaneController cont1 = new AirplaneController(s, plane1, a1, a2, 100);
