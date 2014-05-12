@@ -187,7 +187,6 @@ public class Simulator extends Thread{
 		DisplayClient tempDC = new DisplayClient(host);
 		Simulator s = new Simulator(tempDC);
 
-
 		Airport a1 = new Airport(25, 25, 3, s);
 		Airport a2 = new Airport(50, 50, 1, s);
 		Airport a3 = new Airport(25, 75, 3, s);

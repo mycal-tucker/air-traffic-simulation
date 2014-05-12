@@ -110,12 +110,10 @@ public class DisplayServer extends JPanel implements KeyListener {
 					 */
 					else if (tok.equals("airports")){
 						synchronized (my_display){
-
 							tok = st.nextToken();
 							numAirports = Integer.parseInt(tok);
 							my_display.apX = new double[numAirports];
 							my_display.apY = new double[numAirports];
-
 							for (int i = 0; i < numAirports; i ++){
 								tok = st.nextToken();
 								double x = Double.parseDouble(tok);
@@ -135,6 +133,9 @@ public class DisplayServer extends JPanel implements KeyListener {
 					 */
 					else if (tok.equals("fuel")){
 						synchronized (my_display){
+							tok = st.nextToken();
+							numVehicles = Integer.parseInt(tok);
+							System.out.println(numVehicles);
 							my_display.fuel = new double[numVehicles];		
 							for (int i = 0; i < numVehicles; i ++){
 								tok = st.nextToken();
