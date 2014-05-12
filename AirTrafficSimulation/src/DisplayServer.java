@@ -141,7 +141,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 								tok = st.nextToken();
 								double x = Double.parseDouble(tok);
 								fuel[i]=x;
-								System.out.println(x);
+								//System.out.println(x);
 							}
 						}
 					}
@@ -298,7 +298,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 			}
 			g.drawPolygon(drawX, drawY, 9);
 
-			System.out.println(fuel[j]);
+			//System.out.println(fuel[j]);
 			if (fuel[j]>100)
 				g.setColor(Color.green);
 			else if(fuel[j]<=100 && fuel[j]>50)
