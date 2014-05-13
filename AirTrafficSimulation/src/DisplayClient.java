@@ -7,6 +7,7 @@ public class DisplayClient  {
   PrintWriter output;
   BufferedReader input;
   protected NumberFormat format = new DecimalFormat("#####.##");
+  private boolean gotUserMessage = false;
 
   public DisplayClient(String host) {
     InetAddress address;
@@ -54,16 +55,10 @@ public class DisplayClient  {
     output.println(message);
     output.flush();
     
-    
-    //try to read something:
-    try {
-    	output.println("getMessage");
-    	output.flush();
-		String serverMessage = input.readLine();
-		//TODO: do something with the message
-	} catch (IOException e) {
-		e.printStackTrace();
-	}
+    if (!gotUserMessage){
+    	gotUserMessage = true;
+    	this.getServerMessage();
+    }
   }
   
   /**
@@ -174,5 +169,18 @@ public class DisplayClient  {
     server.update(2, gvX, gvY, gvTheta);
     System.out.print("Press return to exit...");
     System.in.read();
+  }
+  
+  private void getServerMessage(){
+	    //try to read something:
+	    try {
+	    	output.println("getMessage");
+	    	output.flush();
+			String serverMessage = input.readLine();
+			System.out.println(serverMessage);
+			//TODO: do something with the message
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
   }
 }

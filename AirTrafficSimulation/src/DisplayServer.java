@@ -31,7 +31,9 @@ public class DisplayServer extends JPanel implements KeyListener {
 			Color.green, Color.magenta, 
 			Color.orange, Color.pink,
 			Color.red, Color.yellow};
-	
+
+	protected int[] userFlight = new int[2];
+
 	public class History {
 		History() {
 			myX = new double[100000];
@@ -125,16 +127,9 @@ public class DisplayServer extends JPanel implements KeyListener {
 								double y = Double.parseDouble(tok);
 								apX[i] = x;
 								apY[i] = y;
-								//TODO: draw an airport at x, y
 							}
-
-							//printAPS();
 						}
 					}
-
-					/*
-					 * End of our thing
-					 */
 					else if (tok.equals("fuel")){
 						synchronized (my_display){
 							my_display.fuel = new double[numVehicles];		
@@ -145,11 +140,14 @@ public class DisplayServer extends JPanel implements KeyListener {
 							}
 						}
 					}
-					
+
 					else if (tok.equals("getMessage")){
 						//try to send a message to the displayclient
 						//TODO: why did we want a message anyways?
-						String stupidMessage = "hi";
+						//for user added airplane
+						String stupidMessage = Integer.toString(userFlight[0]);
+						stupidMessage = stupidMessage + " " + Integer.toString(userFlight[1]);
+						//String stupidMessage = "hi";
 						output.println(stupidMessage);
 						output.flush();
 					}
@@ -252,50 +250,53 @@ public class DisplayServer extends JPanel implements KeyListener {
 		Container container = frame.getContentPane();
 		//container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
 		container.setLayout(new BorderLayout());
-		
+
 		Object[] options = {"Quit",
 				"Add New Airplane",
-		"Continue"};
+				 "Continue"};
 		int n = JOptionPane.showOptionDialog(frame,
 				"What would you like to do?",
-						"name",
-						JOptionPane.YES_NO_CANCEL_OPTION,
-						JOptionPane.QUESTION_MESSAGE,
-						null,
-						options,
-						options[2]);
+				"name",
+				JOptionPane.YES_NO_CANCEL_OPTION,
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				options,
+				options[2]);
 		System.out.println(n);
-		
+
 		if (n==0)
 			System.exit(-1);
 		else if(n==1){
 			while(isTryAgain == true){
-			Object[] departOptions = {"Airport 4", "Airport 3", "Airport 2","Airport 1"};
-			
-			Object[] arriveOptions = {"Airport 4", "Airport 3", "Airport 2","Airport 1"};
-					
-			int depart = JOptionPane.showOptionDialog(frame,
-					"From what airport would you like to depart?",
-							"name", JOptionPane.YES_NO_CANCEL_OPTION,
-							JOptionPane.QUESTION_MESSAGE,
-							null,
-							departOptions,
-							departOptions[3]);
-			
-			int arrive = JOptionPane.showOptionDialog(frame,
-					"To what airport would you like to arrive?",
-							"name", JOptionPane.YES_NO_CANCEL_OPTION,
-							JOptionPane.QUESTION_MESSAGE,
-							null,
-							arriveOptions,
-							arriveOptions[3]);
-			
-			if(arrive==depart){
-				JOptionPane.showMessageDialog(frame,
-					    "You cannot depart and arrive at the same airport. Please try again.");
-			}
-			else
-				isTryAgain = false;
+				Object[] departOptions = {"Airport 4", "Airport 3", "Airport 2","Airport 1"};
+
+				Object[] arriveOptions = {"Airport 4", "Airport 3", "Airport 2","Airport 1"};
+
+				int depart = JOptionPane.showOptionDialog(frame,
+						"From what airport would you like to depart?",
+						"name", JOptionPane.YES_NO_CANCEL_OPTION,
+						JOptionPane.QUESTION_MESSAGE,
+						null,
+						departOptions,
+						departOptions[3]);
+
+				int arrive = JOptionPane.showOptionDialog(frame,
+						"To what airport would you like to arrive?",
+						"name", JOptionPane.YES_NO_CANCEL_OPTION,
+						JOptionPane.QUESTION_MESSAGE,
+						null,
+						arriveOptions,
+						arriveOptions[3]);
+
+				if(arrive==depart){
+					JOptionPane.showMessageDialog(frame,
+							"You cannot depart and arrive at the same airport. Please try again.");
+				}
+				else{
+					isTryAgain = false;
+					userFlight[0] = depart;
+					userFlight[1] = arrive;
+				}
 			}
 		}
 
@@ -349,37 +350,37 @@ public class DisplayServer extends JPanel implements KeyListener {
 				drawY[i] = 100*gain- drawY[i];
 			}
 			g.drawPolygon(drawX, drawY, 9);
-			
-//			if (fuel[j]>100)
-//				g.setColor(Color.green);
-//			else if(fuel[j]<=100 && fuel[j]>50)
-//				g.setColor(Color.yellow);
-//			else if(fuel[j]<=50 && fuel[j]>0)
-//				g.setColor(Color.orange);
-//			else
-//				g.setColor(Color.red);
-//			
-//			System.out.println(fuel[j]);
-			
+
+			//			if (fuel[j]>100)
+			//				g.setColor(Color.green);
+			//			else if(fuel[j]<=100 && fuel[j]>50)
+			//				g.setColor(Color.yellow);
+			//			else if(fuel[j]<=50 && fuel[j]>0)
+			//				g.setColor(Color.orange);
+			//			else
+			//				g.setColor(Color.red);
+			//			
+			//			System.out.println(fuel[j]);
+
 			try{
-			
-			if(fuel[j]>100)
-				fuel[j]=100;
-				
-			if(fuel[j]<=100 && fuel[j]>=50)
-				g.setColor(new Color((int)((100-fuel[j])/50*255), 255, 0));
-			else if(fuel[j]<50 && fuel[j]>0)
-				g.setColor(new Color(255, (int)((fuel[j])/50*255), 0));
-			else
-				g.setColor(Color.black);
-			
-			g.fillPolygon(drawX, drawY, 9);
-			
+
+				if(fuel[j]>100)
+					fuel[j]=100;
+
+				if(fuel[j]<=100 && fuel[j]>=50)
+					g.setColor(new Color((int)((100-fuel[j])/50*255), 255, 0));
+				else if(fuel[j]<50 && fuel[j]>0)
+					g.setColor(new Color(255, (int)((fuel[j])/50*255), 0));
+				else
+					g.setColor(Color.black);
+
+				g.fillPolygon(drawX, drawY, 9);
+
 			}
 			catch(ArrayIndexOutOfBoundsException e){
 				System.out.println(e);
 			}
-		
+
 		}
 
 	}
