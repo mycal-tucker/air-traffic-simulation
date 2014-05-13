@@ -4,7 +4,8 @@ import java.text.*;
 import java.util.*;
 
 public class DisplayClient  {
-  PrintWriter output; 
+  PrintWriter output;
+  BufferedReader input;
   protected NumberFormat format = new DecimalFormat("#####.##");
 
   public DisplayClient(String host) {
@@ -13,6 +14,7 @@ public class DisplayClient  {
       address = InetAddress.getByName(host);
       Socket server = new Socket(address, 5065);
       output = new PrintWriter(server.getOutputStream());
+      input = new BufferedReader(new InputStreamReader(server.getInputStream()));
     }
     catch (UnknownHostException e) {
       System.err.println("I can't find a host called "+host+". Are you sure you got the name right?");
@@ -51,6 +53,17 @@ public class DisplayClient  {
     //System.out.println("Sent "+message);
     output.println(message);
     output.flush();
+    
+    
+    //try to read something:
+    try {
+    	output.println("getMessage");
+    	output.flush();
+		String serverMessage = input.readLine();
+		//TODO: do something with the message
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
   }
   
   /**

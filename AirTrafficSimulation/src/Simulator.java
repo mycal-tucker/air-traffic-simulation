@@ -17,7 +17,7 @@ public class Simulator extends Thread{
 	private DisplayClient dc;
 	private int numNonUpdatedPlanes; 
 	
-	public final int simDuration = 1000000;
+	public final int simDuration = 100000;
 
 	public Simulator(DisplayClient dc){
 		this.dc = dc;

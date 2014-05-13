@@ -67,7 +67,8 @@ public class DisplayServer extends JPanel implements KeyListener {
 
 
 	public class MessageListener extends Thread {
-		public BufferedReader my_client; 
+		public BufferedReader my_client;
+		public PrintWriter output;
 		public DisplayServer my_display;
 		public MessageListener(Socket client, DisplayServer display) {
 			my_display = display; 
@@ -75,6 +76,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 				//System.out.println("Default size: " + client.getReceiveBufferSize());
 				my_client = new BufferedReader
 						(new InputStreamReader(client.getInputStream()));
+				output = new PrintWriter(client.getOutputStream());
 			}
 			catch (IOException e) {
 				System.err.println("Very weird IOException in creating the BufferedReader");
@@ -142,6 +144,14 @@ public class DisplayServer extends JPanel implements KeyListener {
 								fuel[i]=x;
 							}
 						}
+					}
+					
+					else if (tok.equals("getMessage")){
+						//try to send a message to the displayclient
+						//TODO: why did we want a message anyways?
+						String stupidMessage = "hi";
+						output.println(stupidMessage);
+						output.flush();
 					}
 
 					else {
