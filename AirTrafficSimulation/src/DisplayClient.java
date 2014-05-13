@@ -8,6 +8,8 @@ public class DisplayClient  {
   BufferedReader input;
   protected NumberFormat format = new DecimalFormat("#####.##");
   private boolean gotUserMessage = false;
+  private Simulator sim;
+  private ArrayList<Airport> airports;
 
   public DisplayClient(String host) {
     InetAddress address;
@@ -28,6 +30,14 @@ public class DisplayClient  {
       System.err.println(e);
       System.exit(-1);
     }
+  }
+  
+  /**
+   * Added by Mycal
+   * @param s
+   */
+  public void addSimulator(Simulator s){
+	  this.sim = s;
   }
 
   public void clear() {
@@ -71,6 +81,7 @@ public class DisplayClient  {
    * @param airportList: list of airports
    */
   public void sendAirportMessage(ArrayList<Airport> airportList){
+	  this.airports = airportList;
 	  StringBuffer message = new StringBuffer();
 	  message.append("airports");
 	  message.append(" ");
@@ -107,78 +118,95 @@ public class DisplayClient  {
 	  output.flush();
   }
   
-  public static void main(String argv[]) throws IOException {
-    if (argv.length == 0) {
-      System.err.println("Usage: DisplayClient <hostname>\n"+
-			 "where <hostname> is where DisplayServer is running");
-      System.exit(-1);
-    }
-    String host = argv[0];
-
-    DisplayClient server = new DisplayClient(host);
-    double gvX[] = new double[2];
-    double gvY[] = new double[2];
-    double gvTheta[] = new double[2];
-      
-    for (int i = 0; i < 2; i++) {
-      gvX[i] = Math.random()*100;
-      gvY[i] = Math.random()*100;
-      gvTheta[i] = Math.PI*i;
-    }
-
-    server.update(2, gvX, gvY, gvTheta);
-    System.out.print("Press return to continue...");
-    System.in.read();
-    server.traceOn();
-    gvX[0] = 10;
-    gvY[0] = 10;
-    gvX[1] = 30;
-    gvY[1] = 30;
-    server.update(2, gvX, gvY, gvTheta);
-    gvX[0] = 90;
-    gvY[0] = 10;
-    gvX[1] = 70;
-    gvY[1] = 30;
-    server.update(2, gvX, gvY, gvTheta);
-    gvX[0] = 90;
-    gvY[0] = 90;
-    gvX[1] = 70;
-    gvY[1] = 70;
-    server.update(2, gvX, gvY, gvTheta);
-    gvX[0] = 10;
-    gvY[0] = 90;
-    gvX[1] = 30;
-    gvY[1] = 70;
-    server.update(2, gvX, gvY, gvTheta);
-    gvX[0] = 10;
-    gvY[0] = 10;
-    gvX[1] = 30;
-    gvY[1] = 30;
-    server.update(2, gvX, gvY, gvTheta);
-    System.out.print("Press return to continue...");
-    System.in.read();
-    server.traceOff();
-    server.clear();
-
-    for (int i = 0; i < 2; i++) {
-      gvX[i] = Math.random()*100;
-      gvY[i] = Math.random()*100;
-      gvTheta[i] = Math.PI*i;
-    }
-
-    server.update(2, gvX, gvY, gvTheta);
-    System.out.print("Press return to exit...");
-    System.in.read();
-  }
+  //why do we even have a mian method for displayClient?
+//  public static void main(String argv[]) throws IOException {
+//    if (argv.length == 0) {
+//      System.err.println("Usage: DisplayClient <hostname>\n"+
+//			 "where <hostname> is where DisplayServer is running");
+//      System.exit(-1);
+//    }
+//    String host = argv[0];
+//
+//    DisplayClient server = new DisplayClient(host);
+//    double gvX[] = new double[2];
+//    double gvY[] = new double[2];
+//    double gvTheta[] = new double[2];
+//      
+//    for (int i = 0; i < 2; i++) {
+//      gvX[i] = Math.random()*100;
+//      gvY[i] = Math.random()*100;
+//      gvTheta[i] = Math.PI*i;
+//    }
+//
+//    server.update(2, gvX, gvY, gvTheta);
+//    System.out.print("Press return to continue...");
+//    System.in.read();
+//    server.traceOn();
+//    gvX[0] = 10;
+//    gvY[0] = 10;
+//    gvX[1] = 30;
+//    gvY[1] = 30;
+//    server.update(2, gvX, gvY, gvTheta);
+//    gvX[0] = 90;
+//    gvY[0] = 10;
+//    gvX[1] = 70;
+//    gvY[1] = 30;
+//    server.update(2, gvX, gvY, gvTheta);
+//    gvX[0] = 90;
+//    gvY[0] = 90;
+//    gvX[1] = 70;
+//    gvY[1] = 70;
+//    server.update(2, gvX, gvY, gvTheta);
+//    gvX[0] = 10;
+//    gvY[0] = 90;
+//    gvX[1] = 30;
+//    gvY[1] = 70;
+//    server.update(2, gvX, gvY, gvTheta);
+//    gvX[0] = 10;
+//    gvY[0] = 10;
+//    gvX[1] = 30;
+//    gvY[1] = 30;
+//    server.update(2, gvX, gvY, gvTheta);
+//    System.out.print("Press return to continue...");
+//    System.in.read();
+//    server.traceOff();
+//    server.clear();
+//
+//    for (int i = 0; i < 2; i++) {
+//      gvX[i] = Math.random()*100;
+//      gvY[i] = Math.random()*100;
+//      gvTheta[i] = Math.PI*i;
+//    }
+//
+//    server.update(2, gvX, gvY, gvTheta);
+//    System.out.print("Press return to exit...");
+//    System.in.read();
+//  }
   
   private void getServerMessage(){
-	    //try to read something:
 	    try {
 	    	output.println("getMessage");
 	    	output.flush();
 			String serverMessage = input.readLine();
-			System.out.println(serverMessage);
-			//TODO: do something with the message
+			if (this.sim == null){
+				System.err.println("I can't do anything with this because I don't know sim");
+			}
+			else if (serverMessage.equals("0 0")){
+				//default message, ignore it
+			}
+			else{
+				String[] parsed = serverMessage.split(" ");
+				int startAirportIndex = Integer.parseInt(parsed[0]);
+				int endAirportIndex = Integer.parseInt(parsed[1]);
+				
+				double[] startPose = {0, 0, 0}; //will be overwritten
+				Airplane plane = new Airplane(startPose, 5, 0, this.sim, 50);
+				plane.setPlaneName("user plane");
+				
+				AirplaneController cont = new AirplaneController(this.sim, plane, this.airports.get(startAirportIndex), this.airports.get(endAirportIndex), 100);
+				this.sim.addAirplane(plane, cont);
+				cont.start();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

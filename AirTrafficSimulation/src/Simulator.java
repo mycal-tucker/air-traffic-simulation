@@ -231,6 +231,7 @@ public class Simulator extends Thread{
 
 		DisplayClient tempDC = new DisplayClient(host);
 		Simulator s = new Simulator(tempDC);
+		tempDC.addSimulator(s);
 
 		Airport a1 = new Airport(15, 15, 3, s);
 		Airport a2 = new Airport(50, 50, 1, s);
