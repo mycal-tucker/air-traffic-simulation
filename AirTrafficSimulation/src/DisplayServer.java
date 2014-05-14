@@ -48,38 +48,11 @@ public class DisplayServer extends JPanel implements KeyListener {
 		int trueHistoryLength;
 		int loopHistory;
 	}
-	
-//	public class HistoryList {
-//		HistoryList() {
-//			myXList = new ArrayList<Double>();
-//			myYList = new ArrayList<Double>();
-//			myNumPointsList = 0;
-//			loopHistoryList = 0;
-//			trueHistoryLengthList = 0;
-//		}
-//		public ArrayList<Double> myXList;
-//		public ArrayList<Double> myYList;
-//		int myNumPointsList;
-//		int trueHistoryLengthList;
-//		int loopHistoryList;
-//	}
 	ArrayList<History> historiesList;
-	
-	public synchronized void addHistory(){
 		
-	}
-	
-	History [] histories;
 	boolean trace = false;
 
 	public synchronized void clear() {
-		if (histories !=null){
-			for (int i = 0; i < histories.length; i++) {
-				histories[i].myNumPoints = 0;
-				histories[i].loopHistory = 0;
-				histories[i].trueHistoryLength = 0;
-			}
-		}
 		if (historiesList !=null){
 			for (int i = 0; i < historiesList.size(); i++) {
 				historiesList.get(i).myNumPoints = 0;
@@ -90,9 +63,6 @@ public class DisplayServer extends JPanel implements KeyListener {
 	}
 
 	public synchronized void resetHistories(int numVehicles) {
-		System.out.println("resetting history");
-		
-		
 		if (historiesList == null){
 			historiesList = new ArrayList<History>();
 		}
@@ -130,7 +100,6 @@ public class DisplayServer extends JPanel implements KeyListener {
 					}
 
 					StringTokenizer st = new StringTokenizer(message);
-					//System.out.println("Received: " + message);
 					String tok = st.nextToken();	  
 					if (tok.equals("clear")) {
 						my_display.clear();
@@ -202,24 +171,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 								my_display.gvY[i] = Double.parseDouble(tok);
 								tok = st.nextToken();
 								my_display.gvTheta[i] = Double.parseDouble(tok);
-								if (trace) {
-//									if (histories[i].trueHistoryLength % historySkip == 0){
-//										int n;
-//										if (histories[i].myNumPoints == histories[i].myX.length) {
-//											n = 0;                                                                    
-//											histories[i].myNumPoints = 0;
-//											histories[i].loopHistory = 1;
-//										} else {
-//											n = histories[i].myNumPoints;
-//											histories[i].myNumPoints++;
-//										}
-//										histories[i].myX[n] = my_display.gvX[i];
-//										histories[i].myY[n] = my_display.gvY[i];
-//									}
-//									histories[i].trueHistoryLength++;
-									
-									
-									//copied from above but for ArrayList
+								if (trace) {								
 									if (historiesList.get(i).trueHistoryLength % historySkip == 0){
 										int n;
 										if (historiesList.get(i).myNumPoints == historiesList.get(i).myX.length) {
@@ -314,7 +266,6 @@ public class DisplayServer extends JPanel implements KeyListener {
 				null,
 				options,
 				options[2]);
-		System.out.println(n);
 
 		if (n==2)
 			System.exit(-1);
@@ -404,17 +355,6 @@ public class DisplayServer extends JPanel implements KeyListener {
 			}
 			g.drawPolygon(drawX, drawY, 9);
 
-			//			if (fuel[j]>100)
-			//				g.setColor(Color.green);
-			//			else if(fuel[j]<=100 && fuel[j]>50)
-			//				g.setColor(Color.yellow);
-			//			else if(fuel[j]<=50 && fuel[j]>0)
-			//				g.setColor(Color.orange);
-			//			else
-			//				g.setColor(Color.red);
-			//			
-			//			System.out.println(fuel[j]);
-
 			try{
 				if(fuel[j]>100)
 					fuel[j]=100;
@@ -452,65 +392,9 @@ public class DisplayServer extends JPanel implements KeyListener {
 			g.drawString("Airport "+(j+1), drawX[0],drawY[0] );
 			g.drawPolygon(drawX, drawY, 4);
 		}
-	}
-
-	//	protected synchronized void drawFuel(Graphics g){
-	//		g.setColor(Color.black);
-	//		//TODO
-	//		
-	//		for (int j = 0; j < numVehicles; j ++){
-	//			int drawX[] = new int[4];
-	//			int drawY[] = new int[4];
-	//			
-	//			for (int i = 0; i < 4; i ++){
-	//				double x = apX[j]*gain;
-	//				double y = apY[j]*gain;
-	//				drawX[i] = (int)(x + airportX[i]);
-	//				drawY[i] = (int)(y - airportY[i]);
-	//				drawY[i] = 100*gain - drawY[i];
-	//			}
-	//			Graphics2D g2d = (Graphics2D)g;
-	//			Ellipse2D.Double circle = new Ellipse2D.Double(x, y, 1*gain, 1*gain);
-	//			   g2d.fill(circle);
-	//		}
-	//	}
-
+	}	
+	
 	protected synchronized void drawHistories(Graphics g) {
-		g.setColor(Color.black);
-
-		// This chunk of code just translate and rotates the shape.
-
-		for (int j = 0; j < numVehicles; j++) {
-			if (j < my_colors.length){
-				g.setColor(my_colors[j]);
-			}else{
-				g.setColor(my_colors[my_colors.length-1]);
-			}
-			int drawX[]; int drawY[];
-			if (histories[j].loopHistory == 0){
-				drawX = new int[histories[j].myNumPoints];
-				drawY = new int[histories[j].myNumPoints];
-			}
-			else{
-
-				drawX = new int[histories[j].myX.length];
-				drawY = new int[histories[j].myY.length];
-			}
-			for (int i = 0; i < drawX.length;i++){
-				// We scale the x and y by gain, since the bounds on X and Y are 100(gain)x100(gain)
-
-				double x = histories[j].myX[i]*gain;
-				double y = histories[j].myY[i]*gain;
-				drawX[i] = (int)(x);
-				drawY[i] = 100*gain- (int)y;
-
-			}
-			g.drawPolyline(drawX, drawY, drawX.length);
-		}
-	}
-	
-	
-	protected synchronized void drawHistoriesList(Graphics g) {
 		g.setColor(Color.black);
 
 		// This chunk of code just translate and rotates the shape.
@@ -554,8 +438,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 		g.setColor(Color.black);
 		g.drawString("Display running on "+myHostname, 10,10);
 		if (trace){
-			//drawHistories(g);
-			drawHistoriesList(g);
+			drawHistories(g);
 		}
 		drawVehicles(g);
 		drawAirports(g);

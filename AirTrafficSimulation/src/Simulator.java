@@ -210,14 +210,7 @@ public class Simulator extends Thread{
 	 * Constructs a Simulator and then runs it.
 	 * @param argv
 	 */
-	public static void main(String[] argv) {
-//		if (argv.length <= 0) {
-//			System.err.println("Usage: Simulator <hostname> where "
-//					+ "<hostname> is where DisplayServer is running");
-//			System.exit(-1);
-//		}
-		
-		
+	public static void main(String[] argv) {		
 		String host = null;
 		try {
 			host = InetAddress.getLocalHost().getHostAddress();
@@ -226,9 +219,6 @@ public class Simulator extends Thread{
 			e.printStackTrace();
 		}
 		
-//		String host = argv[0];
-
-
 		DisplayClient tempDC = new DisplayClient(host);
 		Simulator s = new Simulator(tempDC);
 		tempDC.addSimulator(s);

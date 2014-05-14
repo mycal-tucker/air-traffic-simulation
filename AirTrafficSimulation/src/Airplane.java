@@ -227,7 +227,9 @@ public class Airplane extends Thread{
 		}
 		//System.out.println(this.fuelLevel);
 		
-		if (Math.abs(this.fuelLevel) < msec && this.fuelLevel <= 0 ){
+		if (Math.abs(this.fuelLevel) < msec && this.fuelLevel <= 0 ){ //the first term is just to prevent
+			//constant spamming of calling setFlying(false);
+			//this way it only calls that a few times when the plane barely has negative fuel
 			this.setFlying(false);
 			return;
 		}
