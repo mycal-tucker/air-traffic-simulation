@@ -115,6 +115,18 @@ public class DisplayClient  {
 	  output.flush();
   }
   
+  public void sendAirportCapacity(ArrayList<Airport> airportList){
+	  this.airports = airportList;
+	  StringBuffer message = new StringBuffer();
+	  message.append("capacity");
+	  message.append(" ");
+	  for (int i = 0; i < airportList.size(); i ++){
+		  Airport a = airportList.get(i);
+		  message.append(a.getCapacity() + " ");
+	  }
+	  output.println(message);
+	  output.flush();
+  }
   
   private void getServerMessage(){
 	    try {

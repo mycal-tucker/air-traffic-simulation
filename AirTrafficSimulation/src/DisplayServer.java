@@ -22,7 +22,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 	protected int gain = 5;
 	protected int droneX[], droneY[];
 	protected double apX [], apY[], fuel[];
-	protected int airportX[], airportY[];
+	protected int airportX[], airportY[], capacity[];
 	protected int numAirports;
 	protected JFrame frame;
 	protected NumberFormat format = new DecimalFormat("#####.##");
@@ -171,6 +171,18 @@ public class DisplayServer extends JPanel implements KeyListener {
 								tok = st.nextToken();
 								double x = Double.parseDouble(tok);
 								fuel[i]=x;
+							}
+						}
+					}catch(Exception e){};
+					}
+					else if (tok.equals("capacity")){
+						try{
+						synchronized (my_display){
+							my_display.capacity = new int[numAirports];		
+							for (int i = 0; i < numAirports; i ++){
+								tok = st.nextToken();
+								int x = (int) Double.parseDouble(tok);
+								capacity[i]=x;
 							}
 						}
 					}catch(Exception e){};
@@ -459,6 +471,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 				drawY[i] = 100*gain - drawY[i];
 			}
 			g.drawString("Airport "+(j+1), drawX[0],drawY[0] );
+			g.drawString("Capacity: "+capacity[j], drawX[2], drawY[2]);
 			g.drawPolygon(drawX, drawY, 4);
 		}
 	}
