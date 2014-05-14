@@ -303,9 +303,9 @@ public class DisplayServer extends JPanel implements KeyListener {
 		//container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
 		container.setLayout(new BorderLayout());
 
-		Object[] options = {"Quit",
+		Object[] options = {"Continue",
 				"Add New Airplane",
-				 "Continue"};
+				 "Quit"};
 		int n = JOptionPane.showOptionDialog(frame,
 				"What would you like to do?",
 				"name",
@@ -316,13 +316,13 @@ public class DisplayServer extends JPanel implements KeyListener {
 				options[2]);
 		System.out.println(n);
 
-		if (n==0)
+		if (n==2)
 			System.exit(-1);
 		else if(n==1){
 			while(isTryAgain == true){
-				Object[] departOptions = {"Airport 4", "Airport 3", "Airport 2","Airport 1"};
+				Object[] departOptions = {"Airport 1", "Airport 2", "Airport 3","Airport 4"};
 
-				Object[] arriveOptions = {"Airport 4", "Airport 3", "Airport 2","Airport 1"};
+				Object[] arriveOptions = {"Airport 1", "Airport 2", "Airport 3","Airport 4"};
 
 				int depart = JOptionPane.showOptionDialog(frame,
 						"From what airport would you like to depart?",
@@ -348,6 +348,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 					isTryAgain = false;
 					userFlight[0] = depart;
 					userFlight[1] = arrive;
+					System.out.println(depart+" : "+ arrive);
 				}
 			}
 		}
@@ -415,7 +416,6 @@ public class DisplayServer extends JPanel implements KeyListener {
 			//			System.out.println(fuel[j]);
 
 			try{
-
 				if(fuel[j]>100)
 					fuel[j]=100;
 
@@ -427,14 +427,11 @@ public class DisplayServer extends JPanel implements KeyListener {
 					g.setColor(Color.black);
 
 				g.fillPolygon(drawX, drawY, 9);
-
 			}
 			catch(ArrayIndexOutOfBoundsException e){
 				System.out.println(e);
 			}
-
 		}
-
 	}
 
 	protected synchronized void drawAirports(Graphics g){
