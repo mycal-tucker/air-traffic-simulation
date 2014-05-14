@@ -48,6 +48,27 @@ public class DisplayServer extends JPanel implements KeyListener {
 		int trueHistoryLength;
 		int loopHistory;
 	}
+	
+//	public class HistoryList {
+//		HistoryList() {
+//			myXList = new ArrayList<Double>();
+//			myYList = new ArrayList<Double>();
+//			myNumPointsList = 0;
+//			loopHistoryList = 0;
+//			trueHistoryLengthList = 0;
+//		}
+//		public ArrayList<Double> myXList;
+//		public ArrayList<Double> myYList;
+//		int myNumPointsList;
+//		int trueHistoryLengthList;
+//		int loopHistoryList;
+//	}
+	ArrayList<History> historiesList;
+	
+	public synchronized void addHistory(){
+		
+	}
+	
 	History [] histories;
 	boolean trace = false;
 
@@ -59,12 +80,25 @@ public class DisplayServer extends JPanel implements KeyListener {
 				histories[i].trueHistoryLength = 0;
 			}
 		}
+		if (historiesList !=null){
+			for (int i = 0; i < historiesList.size(); i++) {
+				historiesList.get(i).myNumPoints = 0;
+				historiesList.get(i).loopHistory = 0;
+				historiesList.get(i).trueHistoryLength = 0;
+			}
+		}
 	}
 
 	public synchronized void resetHistories(int numVehicles) {
-		histories = new History[numVehicles];
-		for (int i = 0; i < numVehicles; i++)
-			histories[i] = new History();
+		System.out.println("resetting history");
+		
+		
+		if (historiesList == null){
+			historiesList = new ArrayList<History>();
+		}
+		for (int i = historiesList.size(); i < numVehicles; i ++){
+			historiesList.add(new History());
+		}
 	}
 
 
@@ -169,20 +203,38 @@ public class DisplayServer extends JPanel implements KeyListener {
 								tok = st.nextToken();
 								my_display.gvTheta[i] = Double.parseDouble(tok);
 								if (trace) {
-									if (histories[i].trueHistoryLength % historySkip == 0){
+//									if (histories[i].trueHistoryLength % historySkip == 0){
+//										int n;
+//										if (histories[i].myNumPoints == histories[i].myX.length) {
+//											n = 0;                                                                    
+//											histories[i].myNumPoints = 0;
+//											histories[i].loopHistory = 1;
+//										} else {
+//											n = histories[i].myNumPoints;
+//											histories[i].myNumPoints++;
+//										}
+//										histories[i].myX[n] = my_display.gvX[i];
+//										histories[i].myY[n] = my_display.gvY[i];
+//									}
+//									histories[i].trueHistoryLength++;
+									
+									
+									//copied from above but for ArrayList
+									if (historiesList.get(i).trueHistoryLength % historySkip == 0){
 										int n;
-										if (histories[i].myNumPoints == histories[i].myX.length) {
+										if (historiesList.get(i).myNumPoints == historiesList.get(i).myX.length) {
 											n = 0;                                                                    
-											histories[i].myNumPoints = 0;
-											histories[i].loopHistory = 1;
+											historiesList.get(i).myNumPoints = 0;
+											historiesList.get(i).loopHistory = 1;
 										} else {
-											n = histories[i].myNumPoints;
-											histories[i].myNumPoints++;
+											n = historiesList.get(i).myNumPoints;
+											historiesList.get(i).myNumPoints++;
 										}
-										histories[i].myX[n] = my_display.gvX[i];
-										histories[i].myY[n] = my_display.gvY[i];
+										historiesList.get(i).myX[n] = my_display.gvX[i];
+										historiesList.get(i).myY[n] = my_display.gvY[i];
 									}
-									histories[i].trueHistoryLength++;
+									historiesList.get(i).trueHistoryLength++;
+									
 								} // end if (trace) 
 							} // end for (int i = 0; i < my_display.numVehicles; i++) 
 						} // End synchronized (my_display) 
@@ -459,6 +511,41 @@ public class DisplayServer extends JPanel implements KeyListener {
 			g.drawPolyline(drawX, drawY, drawX.length);
 		}
 	}
+	
+	
+	protected synchronized void drawHistoriesList(Graphics g) {
+		g.setColor(Color.black);
+
+		// This chunk of code just translate and rotates the shape.
+
+		for (int j = 0; j < numVehicles; j++) {
+			if (j < my_colors.length){
+				g.setColor(my_colors[j]);
+			}else{
+				g.setColor(my_colors[my_colors.length-1]);
+			}
+			int drawX[]; int drawY[];
+			if (historiesList.get(j).loopHistory == 0){
+				drawX = new int[historiesList.get(j).myNumPoints];
+				drawY = new int[historiesList.get(j).myNumPoints];
+			}
+			else{
+
+				drawX = new int[historiesList.get(j).myX.length];
+				drawY = new int[historiesList.get(j).myY.length];
+			}
+			for (int i = 0; i < drawX.length;i++){
+				// We scale the x and y by gain, since the bounds on X and Y are 100(gain)x100(gain)
+
+				double x = historiesList.get(j).myX[i]*gain;
+				double y = historiesList.get(j).myY[i]*gain;
+				drawX[i] = (int)(x);
+				drawY[i] = 100*gain- (int)y;
+
+			}
+			g.drawPolyline(drawX, drawY, drawX.length);
+		}
+	}
 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g); //paints the background and image
@@ -469,8 +556,10 @@ public class DisplayServer extends JPanel implements KeyListener {
 
 		g.setColor(Color.black);
 		g.drawString("Display running on "+myHostname, 10,10);
-		if (trace) 
-			drawHistories(g);
+		if (trace){
+			//drawHistories(g);
+			drawHistoriesList(g);
+		}
 		drawVehicles(g);
 		drawAirports(g);
 	}
