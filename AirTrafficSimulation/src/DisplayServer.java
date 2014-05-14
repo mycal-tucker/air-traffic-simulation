@@ -433,6 +433,8 @@ public class DisplayServer extends JPanel implements KeyListener {
 					g.setColor(new Color(255, (int)((fuel[j])/50*255), 0));
 				else
 					g.setColor(Color.black);
+				
+				g.drawString("Fuel: "+ (int) fuel[j], drawX[0],drawY[0] );
 
 				g.fillPolygon(drawX, drawY, 9);
 			}
