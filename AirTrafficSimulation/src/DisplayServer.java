@@ -17,12 +17,12 @@ public class DisplayServer extends JPanel implements KeyListener {
 	private static final long serialVersionUID = 1l;
 
 	protected double gvX [], gvY[], gvTheta[];
-	protected boolean isTryAgain = true;
+	protected boolean isTryAgain;
 	protected int numVehicles = 0;
 	protected int gain = 5;
 	protected int droneX[], droneY[];
 	protected double apX [], apY[], fuel[];
-	protected int airportX[], airportY[];
+	protected int airportX[], airportY[], capacity[];
 	protected int numAirports;
 	protected JFrame frame;
 	protected NumberFormat format = new DecimalFormat("#####.##");
@@ -70,7 +70,6 @@ public class DisplayServer extends JPanel implements KeyListener {
 			historiesList.add(new History());
 		}
 	}
-
 
 	public class MessageListener extends Thread {
 		public BufferedReader my_client;
@@ -134,6 +133,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 						}
 					}
 					else if (tok.equals("fuel")){
+						try{
 						synchronized (my_display){
 							my_display.fuel = new double[numVehicles];		
 							for (int i = 0; i < numVehicles; i ++){
@@ -142,6 +142,19 @@ public class DisplayServer extends JPanel implements KeyListener {
 								fuel[i]=x;
 							}
 						}
+					}catch(Exception e){};
+					}
+					else if (tok.equals("capacity")){
+						try{
+						synchronized (my_display){
+							my_display.capacity = new int[numAirports];		
+							for (int i = 0; i < numAirports; i ++){
+								tok = st.nextToken();
+								int x = (int) Double.parseDouble(tok);
+								capacity[i]=x;
+							}
+						}
+					}catch(Exception e){};
 					}
 
 					else if (tok.equals("getMessage")){
@@ -153,6 +166,8 @@ public class DisplayServer extends JPanel implements KeyListener {
 						//String stupidMessage = "hi";
 						output.println(stupidMessage);
 						output.flush();
+						userFlight[0] = 0;
+						userFlight[1] = 0;
 					}
 
 					else {
@@ -255,6 +270,24 @@ public class DisplayServer extends JPanel implements KeyListener {
 		//container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
 		container.setLayout(new BorderLayout());
 
+		userInput();
+
+		setOpaque(true);   
+		setFocusable(true);
+		setMinimumSize(new Dimension(100*gain,100*gain));
+		setPreferredSize(new Dimension(100*gain,100*gain));
+		addKeyListener(this);
+		container.add(this,BorderLayout.WEST);
+		setVisible(true);
+
+		frame.pack();
+		frame.setVisible(true);    
+	}
+
+	public void userInput(){
+		
+		isTryAgain = true;
+		
 		Object[] options = {"Continue",
 				"Add New Airplane",
 				 "Quit"};
@@ -299,35 +332,23 @@ public class DisplayServer extends JPanel implements KeyListener {
 					isTryAgain = false;
 					userFlight[0] = depart;
 					userFlight[1] = arrive;
-					System.out.println(depart+" : "+ arrive);
+					System.out.println("Departing from: Airport "+ (depart+1) + " : " + "Arriving at: Airport " + (arrive+1));
 				}
 			}
 		}
-
-		setOpaque(true);   
-		setFocusable(true);
-		setMinimumSize(new Dimension(100*gain,100*gain));
-		setPreferredSize(new Dimension(100*gain,100*gain));
-		addKeyListener(this);
-		container.add(this,BorderLayout.WEST);
-		setVisible(true);
-
-		frame.pack();
-		frame.setVisible(true);    
 	}
 
-	public void keyPressed(KeyEvent e) { }
-
-	public void keyReleased(KeyEvent e) { }
-
-	public void keyTyped(KeyEvent e)
-	{
-		switch (e.getKeyChar()) {
-		case 'q':
-		case 'Q':
-			System.exit(0);
-		}
+	public void keyPressed(KeyEvent e) {
+		char event = e.getKeyChar();
+		if (event == ' ' || event == ' ')
+			userInput();
+		else if (event == 'q' || event == 'Q')
+			System.exit(-1);
 	}
+	
+	public void keyReleased(KeyEvent e){};
+	public void keyTyped(KeyEvent e){};
+
 
 	protected synchronized void drawVehicles(Graphics g) {
 		g.setColor(Color.black);
@@ -365,11 +386,12 @@ public class DisplayServer extends JPanel implements KeyListener {
 					g.setColor(new Color(255, (int)((fuel[j])/50*255), 0));
 				else
 					g.setColor(Color.black);
+				
+				g.drawString("Fuel: "+ (int) fuel[j], drawX[0],drawY[0] );
 
 				g.fillPolygon(drawX, drawY, 9);
 			}
 			catch(ArrayIndexOutOfBoundsException e){
-				System.out.println(e);
 			}
 		}
 	}
@@ -390,6 +412,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 				drawY[i] = 100*gain - drawY[i];
 			}
 			g.drawString("Airport "+(j+1), drawX[0],drawY[0] );
+			g.drawString("Capacity: "+capacity[j], drawX[2], drawY[2]);
 			g.drawPolygon(drawX, drawY, 4);
 		}
 	}	

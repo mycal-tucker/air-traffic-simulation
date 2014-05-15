@@ -64,11 +64,8 @@ public class DisplayClient  {
     //System.out.println("Sent "+message);
     output.println(message);
     output.flush();
-    
-    if (!gotUserMessage){
-    	gotUserMessage = true;
+
     	this.getServerMessage();
-    }
   }
   
   /**
@@ -118,70 +115,18 @@ public class DisplayClient  {
 	  output.flush();
   }
   
-  //why do we even have a mian method for displayClient?
-//  public static void main(String argv[]) throws IOException {
-//    if (argv.length == 0) {
-//      System.err.println("Usage: DisplayClient <hostname>\n"+
-//			 "where <hostname> is where DisplayServer is running");
-//      System.exit(-1);
-//    }
-//    String host = argv[0];
-//
-//    DisplayClient server = new DisplayClient(host);
-//    double gvX[] = new double[2];
-//    double gvY[] = new double[2];
-//    double gvTheta[] = new double[2];
-//      
-//    for (int i = 0; i < 2; i++) {
-//      gvX[i] = Math.random()*100;
-//      gvY[i] = Math.random()*100;
-//      gvTheta[i] = Math.PI*i;
-//    }
-//
-//    server.update(2, gvX, gvY, gvTheta);
-//    System.out.print("Press return to continue...");
-//    System.in.read();
-//    server.traceOn();
-//    gvX[0] = 10;
-//    gvY[0] = 10;
-//    gvX[1] = 30;
-//    gvY[1] = 30;
-//    server.update(2, gvX, gvY, gvTheta);
-//    gvX[0] = 90;
-//    gvY[0] = 10;
-//    gvX[1] = 70;
-//    gvY[1] = 30;
-//    server.update(2, gvX, gvY, gvTheta);
-//    gvX[0] = 90;
-//    gvY[0] = 90;
-//    gvX[1] = 70;
-//    gvY[1] = 70;
-//    server.update(2, gvX, gvY, gvTheta);
-//    gvX[0] = 10;
-//    gvY[0] = 90;
-//    gvX[1] = 30;
-//    gvY[1] = 70;
-//    server.update(2, gvX, gvY, gvTheta);
-//    gvX[0] = 10;
-//    gvY[0] = 10;
-//    gvX[1] = 30;
-//    gvY[1] = 30;
-//    server.update(2, gvX, gvY, gvTheta);
-//    System.out.print("Press return to continue...");
-//    System.in.read();
-//    server.traceOff();
-//    server.clear();
-//
-//    for (int i = 0; i < 2; i++) {
-//      gvX[i] = Math.random()*100;
-//      gvY[i] = Math.random()*100;
-//      gvTheta[i] = Math.PI*i;
-//    }
-//
-//    server.update(2, gvX, gvY, gvTheta);
-//    System.out.print("Press return to exit...");
-//    System.in.read();
-//  }
+  public void sendAirportCapacity(ArrayList<Airport> airportList){
+	  this.airports = airportList;
+	  StringBuffer message = new StringBuffer();
+	  message.append("capacity");
+	  message.append(" ");
+	  for (int i = 0; i < airportList.size(); i ++){
+		  Airport a = airportList.get(i);
+		  message.append(a.getCapacity() + " ");
+	  }
+	  output.println(message);
+	  output.flush();
+  }
   
   private void getServerMessage(){
 	    try {
@@ -203,9 +148,10 @@ public class DisplayClient  {
 				Airplane plane = new Airplane(startPose, 5, 0, this.sim, 50);
 				plane.setPlaneName("user plane");
 				
-				AirplaneController cont = new AirplaneController(this.sim, plane, this.airports.get(startAirportIndex), this.airports.get(endAirportIndex), 100);
-				this.sim.addAirplane(plane, cont);
+				AirplaneController cont = new AirplaneController(this.sim, plane, this.airports.get(startAirportIndex), this.airports.get(endAirportIndex), this.sim.getCurrentSec()*1000 + this.sim.getCurrentMSec() + 50);
 				cont.start();
+				this.sim.addAirplane(plane, cont);
+				
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

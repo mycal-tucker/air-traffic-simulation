@@ -140,6 +140,7 @@ public class Simulator extends Thread{
 				
 				dc.sendAirportMessage(this.airportList);
 				dc.sendFuelMessage(this.airplaneList);
+				dc.sendAirportCapacity(this.airportList);
 				
 				double[] x = new double[this.airplaneList.size()];
 				double[] y = new double[this.airplaneList.size()];
