@@ -146,7 +146,7 @@ public class DisplayClient  {
 				
 				double[] startPose = {0, 0, 0}; //will be overwritten
 				Airplane plane = new Airplane(startPose, 5, 0, this.sim, 50);
-				plane.setPlaneName("user plane");
+				plane.setPlaneName("user plane" + this.sim.getCurrentSec()*1000 + this.sim.getCurrentMSec());
 				
 				AirplaneController cont = new AirplaneController(this.sim, plane, this.airports.get(startAirportIndex), this.airports.get(endAirportIndex), this.sim.getCurrentSec()*1000 + this.sim.getCurrentMSec() + 50);
 				cont.start();

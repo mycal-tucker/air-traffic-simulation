@@ -159,11 +159,10 @@ public class DisplayServer extends JPanel implements KeyListener {
 
 					else if (tok.equals("getMessage")){
 						//try to send a message to the displayclient
-						//TODO: why did we want a message anyways?
 						//for user added airplane
 						String stupidMessage = Integer.toString(userFlight[0]);
 						stupidMessage = stupidMessage + " " + Integer.toString(userFlight[1]);
-						//String stupidMessage = "hi";
+						
 						output.println(stupidMessage);
 						output.flush();
 						userFlight[0] = 0;

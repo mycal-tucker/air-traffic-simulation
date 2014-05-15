@@ -116,18 +116,18 @@ public class Simulator extends Thread{
 				 * Trying a periodic thing
 				 */
 				//spawn airplanes periodically
-				if (this.time%40000 == 5000){
-					System.out.println("launching a new plane");
-					double[] startPose = {25, 25, 0};
-					Airplane tempAirplane = new Airplane(startPose, 5, 0, this, 75);
-					tempAirplane.setPlaneName("plane" + this.time);
-					//tempAirplane.setPlaneName("plane5");
-					AirplaneController cont1 = new AirplaneController(this, tempAirplane, this.airportList.get(0), this.airportList.get(1), this.time + 100);
-					cont1.start();
-					this.airportList.get(0).spawnAirplane(tempAirplane); //get an airport
-					this.addAirplane(tempAirplane, cont1);
-					this.airportList.get(0).takeoff(tempAirplane);
-				}
+//				if (this.time%40000 == 5000){
+//					System.out.println("launching a new plane");
+//					double[] startPose = {25, 25, 0};
+//					Airplane tempAirplane = new Airplane(startPose, 5, 0, this, 75);
+//					tempAirplane.setPlaneName("plane" + this.time);
+//					//tempAirplane.setPlaneName("plane5");
+//					AirplaneController cont1 = new AirplaneController(this, tempAirplane, this.airportList.get(0), this.airportList.get(1), this.time + 100);
+//					cont1.start();
+//					this.airportList.get(0).spawnAirplane(tempAirplane); //get an airport
+//					this.addAirplane(tempAirplane, cont1);
+//					this.airportList.get(0).takeoff(tempAirplane);
+//				}
 				
 				
 				
